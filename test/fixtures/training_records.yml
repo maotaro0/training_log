@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  training_day: 2026-09-18
+  training_name: MyString
+  weight_kg: 9.99
+  reps: 1
+  set_count: 1
+  user: one
+
+two:
+  training_day: 2026-09-18
+  training_name: MyString
+  weight_kg: 9.99
+  reps: 1
+  set_count: 1
+  user: two
