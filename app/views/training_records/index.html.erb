@@ -1,0 +1,32 @@
+<h1>トレーニング記録一覧</h1>
+
+<% @training_records.each do |training_record| %>
+  <div>
+    <p>
+      日付：
+      <%= training_record.training_day %>
+    </p>
+
+    <p>
+      種目：
+      <%= training_record.training_name %>
+    </p>
+
+    <p>
+      重量：
+      <%= training_record.weight_kg %> kg
+    </p>
+
+    <p>
+      回数：
+      <%= training_record.reps %> 回
+    </p>
+
+    <p>
+      セット数：
+      <%= training_record.set_count %> セット
+    </p>
+  </div>
+
+  <hr>
+<% end %>

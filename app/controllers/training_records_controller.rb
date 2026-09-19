@@ -1,5 +1,9 @@
 class TrainingRecordsController < ApplicationController
   before_action :authenticate_user!
+  def index
+    @training_records = current_user.training_records.order(training_day: :desc)
+  end
+
 
   def new
     @training_record = TrainingRecord.new
