@@ -1,5 +1,9 @@
 <h1>トレーニング記録一覧</h1>
 
+<%= link_to "新しいトレーニングを記録する", new_training_record_path %>
+
+<% if @training_records.any? %>
+
 <% @training_records.each do |training_record| %>
   <div>
     <p>
@@ -26,7 +30,15 @@
       セット数：
       <%= training_record.set_count %> セット
     </p>
+
+    <%= link_to "編集", edit_training_record_path(training_record) %>
   </div>
 
   <hr>
+<% end %>
+
+<% else %>
+
+  <p>まだトレーニング記録がありません。</p>
+
 <% end %>
