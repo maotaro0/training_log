@@ -1,0 +1,44 @@
+<%= form_with model: training_record do |form| %>
+
+  <% if training_record.errors.any? %>
+    <div>
+      <h2>入力内容を確認してください</h2>
+
+      <ul>
+        <% training_record.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :training_day, "トレーニング日" %>
+    <%= form.date_field :training_day %>
+  </div>
+
+  <div>
+    <%= form.label :training_name, "種目名" %>
+    <%= form.text_field :training_name %>
+  </div>
+
+  <div>
+    <%= form.label :weight_kg, "重量（kg）" %>
+    <%= form.number_field :weight_kg, step: 0.5 %>
+  </div>
+
+  <div>
+    <%= form.label :reps, "回数" %>
+    <%= form.number_field :reps %>
+  </div>
+
+  <div>
+    <%= form.label :set_count, "セット数" %>
+    <%= form.number_field :set_count %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+
+<% end %>

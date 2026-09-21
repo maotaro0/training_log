@@ -32,6 +32,11 @@
     </p>
 
     <%= link_to "編集", edit_training_record_path(training_record) %>
+
+    <%= button_to "削除",
+              training_record_path(training_record),
+              method: :delete,
+              data: { turbo_confirm: "この記録を削除しますか？" } %>
   </div>
 
   <hr>

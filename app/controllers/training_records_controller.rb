@@ -33,6 +33,14 @@ class TrainingRecordsController < ApplicationController
     end
   end
 
+  def destroy
+    @training_record = current_user.training_records.find(params[:id])
+    @training_record.destroy
+
+    redirect_to training_records_path
+  end
+
+
   private
 
   def training_record_params
