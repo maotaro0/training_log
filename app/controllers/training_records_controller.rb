@@ -3,6 +3,28 @@ class TrainingRecordsController < ApplicationController
   
   def index
     @training_records = current_user.training_records.order(training_day: :desc)
+  
+    @training_names = current_user.training_records
+                                .where.not(weight_kg: nil)
+                                .distinct
+                                .order(:training_name)
+                                .pluck(:training_name)
+
+    @selected_training_name = params[:training_name].presence || @training_names.first
+
+    @chart_records = current_user.training_records
+                               .where(training_name: @selected_training_name)
+                               .where.not(weight_kg: nil)
+                               .order(:training_day)
+  
+    @chart_labels = @chart_records.map do |record|
+      record.training_day.strftime("%m/%d")
+    end
+
+    @chart_weights = @chart_records.map do |record|
+      record.weight_kg.to_f
+    end
+  
   end
 
   def edit

@@ -5,6 +5,25 @@
   <%= current_user.monthly_training_count %> 回
 </p>
 
+<h2>重量推移グラフ</h2>
+<%= form_with url: training_records_path, method: :get, local: true do |form| %>
+  <%= form.label :training_name, "種目を選択" %>
+
+  <%= form.select :training_name,
+                  options_for_select(@training_names, @selected_training_name),
+                  {},
+                  onchange: "this.form.submit();" %>
+<% end %>
+
+<div>
+  <canvas
+    id="weightProgressChart"
+    data-labels="<%= @chart_labels.to_json %>"
+    data-weights="<%= @chart_weights.to_json %>">
+  </canvas>
+</div>
+
+
 <%= link_to "新しいトレーニングを記録する", new_training_record_path %>
 
 <% if @training_records.any? %>
