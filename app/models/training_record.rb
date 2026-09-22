@@ -16,4 +16,30 @@ class TrainingRecord < ApplicationRecord
       .order(training_day: :desc)
       .first
   end
+
+  def weight_difference
+    previous = previous_record
+
+    return nil if previous.nil?
+    return nil if weight_kg.nil? || previous.weight_kg.nil?
+
+    weight_kg - previous.weight_kg
+  end
+
+  def first_record
+    user.training_records
+      .where(training_name: training_name)
+      .where("training_day <= ?", training_day)
+      .order(training_day: :asc)
+      .first
+  end
+
+  def growth_from_first
+    first = first_record
+
+    return nil if first.nil?
+    return nil if weight_kg.nil? || first.weight_kg.nil?
+
+    weight_kg - first.weight_kg
+  end
 end
