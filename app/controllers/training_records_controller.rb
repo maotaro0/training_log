@@ -1,21 +1,28 @@
 class TrainingRecordsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_exercises, only: [:new, :create, :edit, :update]
   
   def index
     @training_records = current_user.training_records.order(training_day: :desc)
   
-    @training_names = current_user.training_records
-                                .where.not(weight_kg: nil)
-                                .distinct
-                                .order(:training_name)
-                                .pluck(:training_name)
+  @chart_exercises = Exercise.joins(:training_records)
+                           .where(training_records: { user_id: current_user.id })
+                           .where.not(training_records: { weight_kg: nil })
+                           .distinct
+                           .order(:name)
 
-    @selected_training_name = params[:training_name].presence || @training_names.first
+  @selected_exercise = @chart_exercises.find_by(id: params[:exercise_id]) ||
+                     @chart_exercises.first
 
-    @chart_records = current_user.training_records
-                               .where(training_name: @selected_training_name)
-                               .where.not(weight_kg: nil)
-                               .order(:training_day)
+  @chart_records =
+    if @selected_exercise
+      current_user.training_records
+                .where(exercise_id: @selected_exercise.id)
+                .where.not(weight_kg: nil)
+                .order(:training_day)
+  else
+    current_user.training_records.none
+  end
   
     @chart_labels = @chart_records.map do |record|
       record.training_day.strftime("%m/%d")
@@ -65,13 +72,18 @@ class TrainingRecordsController < ApplicationController
 
   private
 
+    def set_exercises
+      @exercises = Exercise.order(:name)
+    end
+
   def training_record_params
     params.require(:training_record).permit(
       :training_day,
-      :training_name,
+      :exercise_id,
       :weight_kg,
       :reps,
       :set_count
     )
   end
+
 end

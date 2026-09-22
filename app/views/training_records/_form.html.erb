@@ -18,8 +18,15 @@
   </div>
 
   <div>
-    <%= form.label :training_name, "種目名" %>
-    <%= form.text_field :training_name %>
+    <%= form.label :exercise_id, "種目名" %>
+
+    <%= form.collection_select(
+        :exercise_id,
+        @exercises,
+        :id,
+        :name,
+        { prompt: "種目を選択してください" }
+      ) %>
   </div>
 
   <div>
