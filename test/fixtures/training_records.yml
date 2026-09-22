@@ -2,7 +2,7 @@
 
 one:
   training_day: 2026-09-18
-  training_name: MyString
+  exercise: one
   weight_kg: 9.99
   reps: 1
   set_count: 1
@@ -10,7 +10,7 @@ one:
 
 two:
   training_day: 2026-09-18
-  training_name: MyString
+  exercise: one
   weight_kg: 9.99
   reps: 1
   set_count: 1
