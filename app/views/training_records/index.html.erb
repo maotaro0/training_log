@@ -20,6 +20,50 @@
       重量：
       <%= training_record.weight_kg %> kg
     </p>
+      <% previous_record = training_record.previous_record %>
+
+      <% if previous_record.present? %>
+        <p>
+          前回重量：
+           <%= previous_record.weight_kg %> kg
+        </p>
+
+     <% difference = training_record.weight_difference %>
+
+    <% if difference.present? %>
+     <p>
+         前回との差：
+      <% if difference > 0 %>
+        +<%= difference %> kg
+        （前回よりアップ）
+      <% elsif difference == 0 %>
+        ±0 kg
+        （前回と同じ）
+      <% else %>
+        <%= difference %> kg
+      （前回よりダウン）
+      <% end %>
+     </p>
+    <% end %>
+
+    <% growth = training_record.growth_from_first %>
+
+    <% if growth.present? %>
+      <p>
+        開始時から：
+        <% if growth > 0 %>
+          +<%= growth %> kg
+        <% elsif growth == 0 %>
+          ±0 kg
+        <% else %>
+          <%= growth %> kg
+        <% end %>
+       </p>
+    <% end %>
+
+    <% else %>
+     <p>前回記録なし</p>
+    <% end %>
 
     <p>
       回数：
