@@ -1,5 +1,10 @@
 <h1>トレーニング記録一覧</h1>
 
+<p>
+  今月のトレーニング回数：
+  <%= current_user.monthly_training_count %> 回
+</p>
+
 <%= link_to "新しいトレーニングを記録する", new_training_record_path %>
 
 <% if @training_records.any? %>
