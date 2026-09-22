@@ -7,4 +7,13 @@ class TrainingRecord < ApplicationRecord
   validates :reps, numericality: { only_integer: true, greater_than: 0 }
   validates :set_count, numericality: { only_integer: true, greater_than: 0 }
 
+
+
+  def previous_record
+  user.training_records
+      .where(training_name: training_name)
+      .where("training_day < ?", training_day)
+      .order(training_day: :desc)
+      .first
+  end
 end
