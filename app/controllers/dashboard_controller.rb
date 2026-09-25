@@ -17,6 +17,15 @@ class DashboardController < ApplicationController
       record.previous_record.present?
     end
 
+    @personal_best_record =
+      if @growth_record
+        current_user.training_records
+                    .where(exercise_id: @growth_record.exercise_id)
+                    .where.not(weight_kg: nil)
+                    .order(weight_kg: :desc, reps: :desc)
+                    .first
+      end
+
     @chart_exercises = Exercise.joins(:training_records)
                                .where(training_records: { user_id: current_user.id })
                                .where.not(training_records: { weight_kg: nil })

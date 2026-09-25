@@ -5,8 +5,13 @@ document.addEventListener("turbo:load", () => {
     return;
   }
 
-  const labels = JSON.parse(canvas.dataset.labels || "[]");
-  const weights = JSON.parse(canvas.dataset.weights || "[]");
+  const labels = JSON.parse(
+    canvas.dataset.labels || "[]"
+  );
+
+  const weights = JSON.parse(
+    canvas.dataset.weights || "[]"
+  );
 
   const existingChart = Chart.getChart(canvas);
 
@@ -22,20 +27,28 @@ document.addEventListener("turbo:load", () => {
 
       datasets: [
         {
-          label: "重量",
           data: weights,
 
-          borderColor: "#38bdf8",
-          backgroundColor: "rgba(56, 189, 248, 0.12)",
+          borderColor: "#2ea8ff",
 
-          borderWidth: 2,
+          backgroundColor:
+            "rgba(46, 168, 255, 0.08)",
+
+          borderWidth: 3,
 
           fill: true,
 
-          tension: 0.3,
+          tension: 0.25,
 
-          pointRadius: 4,
-          pointHoverRadius: 6
+          pointRadius: 3,
+
+          pointHoverRadius: 6,
+
+          pointBackgroundColor: "#e9f7ff",
+
+          pointBorderColor: "#2ea8ff",
+
+          pointBorderWidth: 2
         }
       ]
     },
@@ -45,36 +58,67 @@ document.addEventListener("turbo:load", () => {
 
       maintainAspectRatio: false,
 
+      interaction: {
+        intersect: false,
+        mode: "index"
+      },
+
       plugins: {
         legend: {
           display: false
+        },
+
+        tooltip: {
+          displayColors: false,
+
+          callbacks: {
+            label: (context) => {
+              return `${context.parsed.y} kg`;
+            }
+          }
         }
       },
 
       scales: {
         x: {
+          border: {
+            color: "#425364"
+          },
+
           grid: {
-            display: false
+            color:
+              "rgba(87, 108, 127, 0.16)"
           },
 
           ticks: {
-            color: "#94a3b8"
+            color: "#8899a8",
+
+            font: {
+              size: 10
+            }
           }
         },
 
         y: {
+          border: {
+            display: false
+          },
+
           grid: {
-            color: "rgba(148, 163, 184, 0.18)"
+            color:
+              "rgba(87, 108, 127, 0.20)"
           },
 
           ticks: {
-            color: "#94a3b8"
-          },
+            color: "#8899a8",
 
-          title: {
-            display: true,
-            text: "重量（kg）",
-            color: "#94a3b8"
+            font: {
+              size: 10
+            },
+
+            callback: (value) => {
+              return `${value}`;
+            }
           }
         }
       }
