@@ -1,0 +1,310 @@
+<%= stylesheet_link_tag "dashboard", "data-turbo-track": "reload" %>
+
+<div class="dashboard-page">
+  <div class="dashboard-shell">
+
+    <header class="dashboard-header">
+      <div>
+        <p class="dashboard-kicker">MUSCLES LOG</p>
+        <h1>あなたのジムログ</h1>
+      </div>
+
+      <div class="monthly-count">
+        <span>今月</span>
+        <strong><%= @monthly_training_count %></strong>
+        <span>回</span>
+      </div>
+    </header>
+
+    <main class="dashboard-main">
+
+      <section class="dashboard-card dashboard-primary-card">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">LATEST WORKOUT</p>
+            <h2>最新のトレーニング</h2>
+          </div>
+
+          <% if @latest_record %>
+            <span class="record-date">
+              <%= @latest_record.training_day.strftime("%m/%d") %>
+            </span>
+          <% end %>
+        </div>
+
+        <% if @latest_record %>
+          <div class="latest-record">
+            <strong class="latest-exercise-name">
+              <%= @latest_record.exercise.name %>
+            </strong>
+
+            <div class="record-stats">
+
+              <span>
+                <% if @latest_record.weight_kg.present? %>
+                  <%= number_with_precision(
+                        @latest_record.weight_kg,
+                        precision: 1,
+                        strip_insignificant_zeros: true
+                      ) %>
+                  kg
+                <% else %>
+                  自重
+                <% end %>
+              </span>
+
+              <span>
+                <%= @latest_record.reps %> 回
+              </span>
+
+              <span>
+                <%= @latest_record.set_count %> セット
+              </span>
+
+            </div>
+          </div>
+        <% else %>
+          <p class="empty-message">
+            まだトレーニング記録がありません。
+          </p>
+        <% end %>
+
+        <div class="dashboard-actions">
+          <%= link_to "＋ 新しく記録する",
+                      new_training_record_path,
+                      class: "dashboard-button dashboard-button-primary" %>
+
+          <%= link_to "記録一覧を見る",
+                      training_records_path,
+                      class: "dashboard-button dashboard-button-secondary" %>
+        </div>
+      </section>
+
+
+      <section class="dashboard-card">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">GROWTH</p>
+            <h2>直近の成長ハイライト</h2>
+          </div>
+        </div>
+
+        <% if @growth_record %>
+
+          <% difference = @growth_record.weight_difference %>
+          <% total_growth = @growth_record.growth_from_first %>
+
+          <div class="growth-highlight">
+
+            <div class="growth-main">
+              <strong>
+                <%= @growth_record.exercise.name %>
+              </strong>
+
+              <% if difference > 0 %>
+
+                <span class="growth-badge growth-up">
+                  +<%= number_with_precision(
+                        difference,
+                        precision: 1,
+                        strip_insignificant_zeros: true
+                      ) %>
+                  kg UP
+                </span>
+
+              <% elsif difference == 0 %>
+
+                <span class="growth-badge growth-flat">
+                  ±0 kg
+                </span>
+
+              <% else %>
+
+                <span class="growth-badge growth-down">
+                  <%= number_with_precision(
+                        difference,
+                        precision: 1,
+                        strip_insignificant_zeros: true
+                      ) %>
+                  kg
+                </span>
+
+              <% end %>
+            </div>
+
+            <% if total_growth.present? %>
+              <p class="growth-total">
+                開始時から
+
+                <% if total_growth > 0 %>
+                  +
+                <% end %>
+
+                <%= number_with_precision(
+                      total_growth,
+                      precision: 1,
+                      strip_insignificant_zeros: true
+                    ) %>
+
+                kg
+              </p>
+            <% end %>
+
+          </div>
+
+        <% else %>
+
+          <p class="empty-message">
+            同じ種目を2回以上記録すると、
+            前回との成長がここに表示されます。
+          </p>
+
+        <% end %>
+      </section>
+
+
+      <section class="dashboard-card dashboard-chart-card">
+
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">PROGRESS</p>
+            <h2>重量推移グラフ</h2>
+          </div>
+        </div>
+
+        <% if @chart_exercises.any? && @selected_exercise %>
+
+          <%= form_with url: root_path,
+                        method: :get,
+                        local: true,
+                        class: "dashboard-chart-form" do |form| %>
+
+            <%= form.collection_select(
+                  :exercise_id,
+                  @chart_exercises,
+                  :id,
+                  :name,
+                  { selected: @selected_exercise.id },
+                  {
+                    class: "dashboard-select",
+                    onchange: "this.form.submit();"
+                  }
+                ) %>
+
+          <% end %>
+
+          <div class="chart-wrapper">
+            <canvas
+              id="weightProgressChart"
+              data-labels='<%= @chart_labels.to_json %>'
+              data-weights='<%= @chart_weights.to_json %>'>
+            </canvas>
+          </div>
+
+        <% else %>
+
+          <p class="empty-message">
+            重量を記録するとグラフが表示されます。
+          </p>
+
+        <% end %>
+
+      </section>
+
+
+      <section class="dashboard-card">
+
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">RECENT</p>
+            <h2>前回の記録</h2>
+          </div>
+        </div>
+
+        <% if @latest_record %>
+
+          <div class="recent-record">
+
+            <div>
+              <strong>
+                <%= @latest_record.exercise.name %>
+              </strong>
+
+              <p>
+                <%= @latest_record.training_day.strftime("%Y/%m/%d") %>
+              </p>
+            </div>
+
+            <div class="recent-record-value">
+
+              <% if @latest_record.weight_kg.present? %>
+
+                <span>
+                  <%= number_with_precision(
+                        @latest_record.weight_kg,
+                        precision: 1,
+                        strip_insignificant_zeros: true
+                      ) %>
+                  kg
+                </span>
+
+              <% else %>
+
+                <span>自重</span>
+
+              <% end %>
+
+              <span>
+                × <%= @latest_record.reps %> 回
+              </span>
+
+              <span>
+                <%= @latest_record.set_count %> セット
+              </span>
+
+            </div>
+          </div>
+
+        <% else %>
+
+          <p class="empty-message">
+            まだ記録がありません。
+          </p>
+
+        <% end %>
+
+      </section>
+
+    </main>
+
+
+    <nav class="dashboard-nav">
+
+      <%= link_to root_path,
+                  class: "dashboard-nav-item dashboard-nav-current" do %>
+        <span class="nav-icon">⌂</span>
+        <span>ホーム</span>
+      <% end %>
+
+      <%= link_to new_training_record_path,
+                  class: "dashboard-nav-item" do %>
+        <span class="nav-icon">＋</span>
+        <span>記録する</span>
+      <% end %>
+
+      <%= link_to training_records_path,
+                  class: "dashboard-nav-item" do %>
+        <span class="nav-icon">▥</span>
+        <span>記録一覧</span>
+      <% end %>
+
+      <%= link_to edit_user_registration_path,
+                  class: "dashboard-nav-item" do %>
+        <span class="nav-icon">●</span>
+        <span>設定</span>
+      <% end %>
+
+    </nav>
+
+  </div>
+</div>
