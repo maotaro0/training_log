@@ -5,4 +5,7 @@ Rails.application.routes.draw do
 
   resources :training_records,
             only: [:index, :new, :create, :edit, :update, :destroy]
+
+  resources :exercises,
+            only: [:index, :new, :create, :edit, :update, :destroy]
 end

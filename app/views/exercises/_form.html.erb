@@ -1,0 +1,25 @@
+<%= form_with model: exercise do |form| %>
+  <%= hidden_field_tag :return_to, params[:return_to] %>
+
+  <% if exercise.errors.any? %>
+    <div>
+      <p>入力内容を確認してください。</p>
+
+      <ul>
+        <% exercise.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name, "種目名" %>
+    <%= form.text_field :name, placeholder: "例：ベンチプレス" %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+
+<% end %>

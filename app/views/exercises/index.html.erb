@@ -1,0 +1,38 @@
+<h1>種目管理</h1>
+
+<div>
+  <%= link_to "＋ 新しい種目を登録", new_exercise_path %>
+</div>
+
+<% if @exercises.any? %>
+
+  <div>
+    <% @exercises.each do |exercise| %>
+
+      <div>
+        <span>
+          <%= exercise.name %>
+        </span>
+
+        <%= link_to "編集", edit_exercise_path(exercise) %>
+
+        <% if exercise.training_records.exists? %>
+          <span>記録あり</span>
+        <% else %>
+          <%= button_to "削除",
+                        exercise_path(exercise),
+                        method: :delete,
+                        data: {
+                          turbo_confirm: "#{exercise.name}を削除しますか？"
+                        } %>
+        <% end %>
+      </div>
+
+    <% end %>
+  </div>
+
+<% else %>
+
+  <p>登録されている種目はありません。</p>
+
+<% end %>
