@@ -1,51 +1,154 @@
-<%= form_with model: training_record do |form| %>
+<%= form_with model: training_record,
+              class: "training-form" do |form| %>
+
 
   <% if training_record.errors.any? %>
-    <div>
-      <h2>入力内容を確認してください</h2>
+
+    <div class="form-errors">
+
+      <div class="form-errors-title">
+        入力内容を確認してください
+      </div>
 
       <ul>
+
         <% training_record.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
+
+          <li>
+            <%= message %>
+          </li>
+
         <% end %>
+
       </ul>
+
     </div>
+
   <% end %>
 
-  <div>
-    <%= form.label :training_day, "トレーニング日" %>
-    <%= form.date_field :training_day %>
+
+  <div class="form-field">
+
+    <%= form.label :training_day,
+                   "トレーニング日",
+                   class: "form-label" %>
+
+    <%= form.date_field :training_day,
+                        class: "form-control",
+                        required: true %>
+
   </div>
 
-  <div>
-    <%= form.label :exercise_id, "種目名" %>
+
+  <div class="form-field">
+
+    <%= form.label :exercise_id,
+                   "種目",
+                   class: "form-label" %>
 
     <%= form.collection_select(
-        :exercise_id,
-        @exercises,
-        :id,
-        :name,
-        { prompt: "種目を選択してください" }
-      ) %>
+          :exercise_id,
+          @exercises,
+          :id,
+          :name,
+          {
+            prompt: "種目を選択してください"
+          },
+          {
+            class: "form-control form-select",
+            required: true
+          }
+        ) %>
+
   </div>
 
-  <div>
-    <%= form.label :weight_kg, "重量（kg）" %>
-    <%= form.number_field :weight_kg, step: 0.5 %>
+
+  <div class="form-two-columns">
+
+    <div class="form-field">
+
+      <%= form.label :weight_kg,
+                     "重量",
+                     class: "form-label" %>
+
+      <div class="input-with-unit">
+
+        <%= form.number_field :weight_kg,
+                              step: 0.5,
+                              min: 0,
+                              placeholder: "70",
+                              class: "form-control" %>
+
+        <span>
+          kg
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="form-field">
+
+      <%= form.label :reps,
+                     "回数",
+                     class: "form-label" %>
+
+      <div class="input-with-unit">
+
+        <%= form.number_field :reps,
+                              min: 1,
+                              placeholder: "10",
+                              class: "form-control",
+                              required: true %>
+
+        <span>
+          回
+        </span>
+
+      </div>
+
+    </div>
+
   </div>
 
-  <div>
-    <%= form.label :reps, "回数" %>
-    <%= form.number_field :reps %>
+
+  <div class="form-field">
+
+    <%= form.label :set_count,
+                   "セット数",
+                   class: "form-label" %>
+
+    <div class="input-with-unit">
+
+      <%= form.number_field :set_count,
+                            min: 1,
+                            placeholder: "3",
+                            class: "form-control",
+                            required: true %>
+
+      <span>
+        セット
+      </span>
+
+    </div>
+
   </div>
 
-  <div>
-    <%= form.label :set_count, "セット数" %>
-    <%= form.number_field :set_count %>
-  </div>
 
-  <div>
-    <%= form.submit %>
+  <div class="form-submit-area">
+
+    <%= form.submit(
+          training_record.persisted? ?
+            "変更を保存する" :
+            "トレーニングを記録する",
+          class: "form-submit-button"
+        ) %>
+
+    <%= link_to "キャンセル",
+                training_records_path,
+                class: "form-cancel-button" %>
+
   </div>
 
 <% end %>

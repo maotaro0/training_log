@@ -1,121 +1,344 @@
-<h1>トレーニング記録一覧</h1>
+<div class="records-page">
 
-<p>
-  今月のトレーニング回数：
-  <%= current_user.monthly_training_count %> 回
-</p>
+  <div class="records-shell">
 
-<h2>重量推移グラフ</h2>
-<%= form_with url: training_records_path, method: :get, local: true do |form| %>
-  <%= form.label :exercise_id, "種目を選択" %>
+    <header class="subpage-header">
 
-  <%= form.collection_select(
-        :exercise_id,
-        @chart_exercises,
-        :id,
-        :name,
-        { selected: @selected_exercise&.id },
-        { onchange: "this.form.submit();" }
-      ) %>
-<% end %>
-
-<div>
-  <canvas
-    id="weightProgressChart"
-    data-labels="<%= @chart_labels.to_json %>"
-    data-weights="<%= @chart_weights.to_json %>">
-  </canvas>
-</div>
-
-
-<%= link_to "新しいトレーニングを記録する", new_training_record_path %>
-
-<% if @training_records.any? %>
-
-<% @training_records.each do |training_record| %>
-  <div>
-    <p>
-      日付：
-      <%= training_record.training_day %>
-    </p>
-
-    <p>
-      種目：
-      <%= training_record.exercise.name %>
-    </p>
-
-    <p>
-      重量：
-      <%= training_record.weight_kg %> kg
-    </p>
-      <% previous_record = training_record.previous_record %>
-
-      <% if previous_record.present? %>
-        <p>
-          前回重量：
-           <%= previous_record.weight_kg %> kg
+      <div>
+        <p class="subpage-kicker">
+          TRAINING ANALYSIS
         </p>
 
-     <% difference = training_record.weight_difference %>
+        <h1>
+          成長分析
+        </h1>
 
-    <% if difference.present? %>
-     <p>
-         前回との差：
-      <% if difference > 0 %>
-        +<%= difference %> kg
-        （前回よりアップ）
-      <% elsif difference == 0 %>
-        ±0 kg
-        （前回と同じ）
-      <% else %>
-        <%= difference %> kg
-      （前回よりダウン）
-      <% end %>
-     </p>
-    <% end %>
+        <p class="subpage-description">
+          トレーニングの積み重ねを確認しましょう
+        </p>
+      </div>
 
-    <% growth = training_record.growth_from_first %>
+    </header>
 
-    <% if growth.present? %>
-      <p>
-        開始時から：
-        <% if growth > 0 %>
-          +<%= growth %> kg
-        <% elsif growth == 0 %>
-          ±0 kg
-        <% else %>
-          <%= growth %> kg
+
+    <main class="records-main">
+
+      <section class="records-summary-card">
+
+        <div class="summary-icon">
+          ✓
+        </div>
+
+        <div class="summary-content">
+
+          <p>
+            今月のトレーニング
+          </p>
+
+          <div class="summary-number">
+
+            <strong>
+              <%= current_user.monthly_training_count %>
+            </strong>
+
+            <span>回</span>
+
+          </div>
+
+        </div>
+
+        <%= link_to new_training_record_path,
+                    class: "summary-add-button" do %>
+
+          ＋ 記録
+
         <% end %>
-       </p>
-    <% end %>
 
-    <% else %>
-     <p>前回記録なし</p>
-    <% end %>
+      </section>
 
-    <p>
-      回数：
-      <%= training_record.reps %> 回
-    </p>
 
-    <p>
-      セット数：
-      <%= training_record.set_count %> セット
-    </p>
+      <section class="records-card chart-records-card">
 
-    <%= link_to "編集", edit_training_record_path(training_record) %>
+        <div class="records-card-header">
 
-    <%= button_to "削除",
-              training_record_path(training_record),
-              method: :delete,
-              data: { turbo_confirm: "この記録を削除しますか？" } %>
+          <div>
+
+            <p class="records-card-kicker">
+              PROGRESS
+            </p>
+
+            <h2>
+              重量推移
+            </h2>
+
+          </div>
+
+
+          <% if @chart_exercises.any? %>
+
+            <%= form_with url: training_records_path,
+                          method: :get,
+                          local: true do |form| %>
+
+              <%= form.collection_select(
+                    :exercise_id,
+                    @chart_exercises,
+                    :id,
+                    :name,
+                    { selected: @selected_exercise&.id },
+                    {
+                      class: "records-select",
+                      onchange: "this.form.submit();"
+                    }
+                  ) %>
+
+            <% end %>
+
+          <% end %>
+
+        </div>
+
+
+        <% if @selected_exercise %>
+
+          <div class="records-chart-wrapper">
+
+            <canvas
+              id="weightProgressChart"
+              data-labels='<%= @chart_labels.to_json %>'
+              data-weights='<%= @chart_weights.to_json %>'>
+            </canvas>
+
+          </div>
+
+        <% else %>
+
+          <p class="records-empty">
+            重量を記録するとグラフが表示されます。
+          </p>
+
+        <% end %>
+
+      </section>
+
+
+      <section class="history-section">
+
+        <div class="history-heading">
+
+          <div>
+
+            <p class="records-card-kicker">
+              HISTORY
+            </p>
+
+            <h2>
+              トレーニング履歴
+            </h2>
+
+          </div>
+
+          <span>
+            <%= @training_records.count %>件
+          </span>
+
+        </div>
+
+
+        <% if @training_records.any? %>
+
+          <div class="history-list">
+
+            <% @training_records.each do |training_record| %>
+
+              <% previous_record = training_record.previous_record %>
+              <% difference = training_record.weight_difference %>
+              <% growth = training_record.growth_from_first %>
+
+              <article class="history-card">
+
+                <div class="history-date">
+
+                  <span class="history-day">
+                    <%= training_record.training_day.strftime("%d") %>
+                  </span>
+
+                  <span class="history-month">
+                    <%= training_record.training_day.strftime("%m月") %>
+                  </span>
+
+                </div>
+
+
+                <div class="history-body">
+
+                  <div class="history-title-row">
+
+                    <h3>
+                      <%= training_record.exercise.name %>
+                    </h3>
+
+
+                    <% if difference.present? && difference > 0 %>
+
+                      <span class="history-growth-badge">
+                        +<%= number_with_precision(
+                              difference,
+                              precision: 1,
+                              strip_insignificant_zeros: true
+                            ) %>kg
+                      </span>
+
+                    <% end %>
+
+                  </div>
+
+
+                  <div class="history-values">
+
+                    <span>
+
+                      <% if training_record.weight_kg.present? %>
+
+                        <strong>
+                          <%= number_with_precision(
+                                training_record.weight_kg,
+                                precision: 1,
+                                strip_insignificant_zeros: true
+                              ) %>
+                        </strong>
+
+                        kg
+
+                      <% else %>
+
+                        <strong>自重</strong>
+
+                      <% end %>
+
+                    </span>
+
+
+                    <span>
+                      ×
+                      <strong>
+                        <%= training_record.reps %>
+                      </strong>
+                      回
+                    </span>
+
+
+                    <span>
+                      <strong>
+                        <%= training_record.set_count %>
+                      </strong>
+                      セット
+                    </span>
+
+                  </div>
+
+
+                  <% if previous_record.present? %>
+
+                    <div class="history-comparison">
+
+                      <span>
+                        前回：
+
+                        <% if previous_record.weight_kg.present? %>
+
+                          <%= number_with_precision(
+                                previous_record.weight_kg,
+                                precision: 1,
+                                strip_insignificant_zeros: true
+                              ) %>kg
+
+                        <% else %>
+
+                          自重
+
+                        <% end %>
+
+                      </span>
+
+
+                      <% if growth.present? %>
+
+                        <span>
+                          開始時から
+
+                          <% if growth > 0 %>
+                            +
+                          <% end %>
+
+                          <%= number_with_precision(
+                                growth,
+                                precision: 1,
+                                strip_insignificant_zeros: true
+                              ) %>kg
+                        </span>
+
+                      <% end %>
+
+                    </div>
+
+                  <% else %>
+
+                    <p class="first-record-label">
+                      初回記録
+                    </p>
+
+                  <% end %>
+
+
+                  <div class="history-actions">
+
+                    <%= link_to "編集",
+                                edit_training_record_path(training_record),
+                                class: "history-edit-button" %>
+
+
+                    <%= button_to "削除",
+                                  training_record_path(training_record),
+                                  method: :delete,
+                                  data: {
+                                    turbo_confirm: "この記録を削除しますか？"
+                                  },
+                                  class: "history-delete-button" %>
+
+                  </div>
+
+                </div>
+
+              </article>
+
+            <% end %>
+
+          </div>
+
+        <% else %>
+
+          <div class="records-card">
+
+            <p class="records-empty">
+              まだトレーニング記録がありません。
+            </p>
+
+            <%= link_to "最初の記録を作成する",
+                        new_training_record_path,
+                        class: "records-primary-button" %>
+
+          </div>
+
+        <% end %>
+
+      </section>
+
+    </main>
+
+
+    <%= render "shared/bottom_nav", active: :analysis %>
+
   </div>
 
-  <hr>
-<% end %>
-
-<% else %>
-
-  <p>まだトレーニング記録がありません。</p>
-
-<% end %>
+</div>

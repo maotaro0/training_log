@@ -1,3 +1,64 @@
-<h1>トレーニング記録を編集</h1>
+<div class="records-page">
 
-<%= render "form", training_record: @training_record %>
+  <div class="records-shell">
+
+    <header class="record-form-header">
+
+      <%= link_to training_records_path,
+                  class: "back-button" do %>
+        ‹
+      <% end %>
+
+      <div>
+
+        <p class="subpage-kicker">
+          EDIT WORKOUT
+        </p>
+
+        <h1>
+          トレーニング記録を編集
+        </h1>
+
+      </div>
+
+    </header>
+
+
+    <main class="record-form-main">
+
+      <section class="record-form-card">
+
+        <div class="form-introduction">
+
+          <div class="form-introduction-icon form-edit-icon">
+            ✎
+          </div>
+
+          <div>
+
+            <h2>
+              記録を修正
+            </h2>
+
+            <p>
+              内容を確認して変更してください
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <%= render "form",
+                   training_record: @training_record %>
+
+      </section>
+
+    </main>
+
+
+    <%= render "shared/bottom_nav", active: :record %>
+
+  </div>
+
+</div>

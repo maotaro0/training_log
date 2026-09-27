@@ -1,0 +1,40 @@
+<% active = local_assigns.fetch(:active, nil) %>
+
+<nav class="bottom-nav">
+
+  <%= link_to root_path,
+              class: "nav-item #{'nav-item-active' if active == :home}" do %>
+
+    <span class="nav-symbol">⌂</span>
+    <span>ホーム</span>
+
+  <% end %>
+
+
+  <%= link_to new_training_record_path,
+              class: "nav-item #{'nav-item-active' if active == :record}" do %>
+
+    <span class="nav-symbol nav-plus">＋</span>
+    <span>記録する</span>
+
+  <% end %>
+
+
+  <%= link_to training_records_path,
+              class: "nav-item #{'nav-item-active' if active == :analysis}" do %>
+
+    <span class="nav-symbol">▥</span>
+    <span>成長分析</span>
+
+  <% end %>
+
+
+  <%= link_to edit_user_registration_path,
+              class: "nav-item #{'nav-item-active' if active == :settings}" do %>
+
+    <span class="nav-symbol">⚙</span>
+    <span>設定</span>
+
+  <% end %>
+
+</nav>

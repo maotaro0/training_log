@@ -1,3 +1,64 @@
-<h1>トレーニング記録</h1>
+<div class="records-page">
 
-<%= render "form", training_record: @training_record %>
+  <div class="records-shell">
+
+    <header class="record-form-header">
+
+      <%= link_to training_records_path,
+                  class: "back-button" do %>
+        ‹
+      <% end %>
+
+      <div>
+
+        <p class="subpage-kicker">
+          NEW WORKOUT
+        </p>
+
+        <h1>
+          トレーニングを記録
+        </h1>
+
+      </div>
+
+    </header>
+
+
+    <main class="record-form-main">
+
+      <section class="record-form-card">
+
+        <div class="form-introduction">
+
+          <div class="form-introduction-icon">
+            ＋
+          </div>
+
+          <div>
+
+            <h2>
+              今日のトレーニング
+            </h2>
+
+            <p>
+              今日頑張った内容を記録しましょう
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <%= render "form",
+                   training_record: @training_record %>
+
+      </section>
+
+    </main>
+
+
+    <%= render "shared/bottom_nav", active: :record %>
+
+  </div>
+
+</div>
