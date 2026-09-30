@@ -1,7 +1,21 @@
-<h1>種目を登録</h1>
+<% from_record = params[:return_to] == new_training_record_path %>
+<% back_path = from_record ? new_training_record_path : exercises_path %>
+<% back_label = from_record ? "記録画面に戻る" : "種目一覧に戻る" %>
 
-<%= render "form", exercise: @exercise %>
+<div class="records-page">
+  <div class="records-shell">
+    <header class="record-form-header">
+      <%= link_to "‹", back_path, class: "back-button", aria: { label: back_label } %>
+      <h1>種目を登録</h1>
+    </header>
 
-<div>
-  <%= link_to "種目一覧に戻る", exercises_path %>
+    <main class="record-form-main">
+      <section class="record-form-card">
+        <%= render "form", exercise: @exercise %>
+        <%= link_to back_label, back_path, class: "form-cancel-button" %>
+      </section>
+    </main>
+
+    <%= render "shared/bottom_nav", active: nil %>
+  </div>
 </div>

@@ -1,9 +1,9 @@
-<%= form_with model: exercise do |form| %>
+<%= form_with model: exercise, class: "training-form" do |form| %>
   <%= hidden_field_tag :return_to, params[:return_to] %>
 
   <% if exercise.errors.any? %>
-    <div>
-      <p>入力内容を確認してください。</p>
+    <div class="form-errors" role="alert">
+      <p class="form-errors-title">入力内容を確認してください。</p>
 
       <ul>
         <% exercise.errors.full_messages.each do |message| %>
@@ -13,13 +13,18 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :name, "種目名" %>
-    <%= form.text_field :name, placeholder: "例：ベンチプレス" %>
+  <div class="form-field">
+    <%= form.label :name, "種目名", class: "form-label" %>
+    <%= form.text_field :name,
+                        placeholder: "例：ベンチプレス",
+                        class: "form-control",
+                        required: true %>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <div class="form-submit-area">
+    <%= form.submit(
+          exercise.persisted? ? "変更を保存する" : "種目を登録する",
+          class: "form-submit-button"
+        ) %>
   </div>
-
 <% end %>

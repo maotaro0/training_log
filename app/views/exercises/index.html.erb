@@ -1,38 +1,50 @@
-<h1>種目管理</h1>
+<div class="records-page">
+  <div class="records-shell">
+    <header class="subpage-header">
+      <h1>種目管理</h1>
+      <p class="subpage-description">
+        トレーニングで使用する種目を登録・編集できます。
+      </p>
+    </header>
 
-<div>
-  <%= link_to "＋ 新しい種目を登録", new_exercise_path %>
-</div>
+    <main class="records-main">
+      <%= link_to "＋ 新しい種目を登録",
+                  new_exercise_path,
+                  class: "records-primary-button" %>
 
-<% if @exercises.any? %>
+      <% if @exercises.any? %>
+        <% @exercises.each do |exercise| %>
+          <section class="records-card">
+            <div class="records-card-header">
+              <h2><%= exercise.name %></h2>
+            </div>
 
-  <div>
-    <% @exercises.each do |exercise| %>
+            <div class="history-actions">
+              <%= link_to "編集",
+                          edit_exercise_path(exercise),
+                          class: "history-edit-button" %>
 
-      <div>
-        <span>
-          <%= exercise.name %>
-        </span>
-
-        <%= link_to "編集", edit_exercise_path(exercise) %>
-
-        <% if exercise.training_records.exists? %>
-          <span>記録あり</span>
-        <% else %>
-          <%= button_to "削除",
-                        exercise_path(exercise),
-                        method: :delete,
-                        data: {
-                          turbo_confirm: "#{exercise.name}を削除しますか？"
-                        } %>
+              <% if exercise.training_records.exists? %>
+                <span class="records-empty">記録あり・削除不可</span>
+              <% else %>
+                <%= button_to "削除",
+                              exercise_path(exercise),
+                              method: :delete,
+                              form: {
+                                data: {
+                                  turbo_confirm: "#{exercise.name}を削除しますか？"
+                                }
+                              },
+                              class: "history-delete-button" %>
+              <% end %>
+            </div>
+          </section>
         <% end %>
-      </div>
+      <% else %>
+        <p class="records-empty">登録されている種目はありません。</p>
+      <% end %>
+    </main>
 
-    <% end %>
+    <%= render "shared/bottom_nav", active: nil %>
   </div>
-
-<% else %>
-
-  <p>登録されている種目はありません。</p>
-
-<% end %>
+</div>
