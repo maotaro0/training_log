@@ -1,0 +1,49 @@
+<div class="records-page">
+  <div class="records-shell">
+    <header class="subpage-header">
+      <h1>ジムログ</h1>
+      <p class="subpage-description">
+        パスワードを忘れた場合はこちらから。
+      </p>
+    </header>
+
+    <main class="record-form-main">
+      <section class="record-form-card">
+        <div class="form-introduction">
+          <div>
+            <h2>パスワード再設定</h2>
+            <p>登録済みのメールアドレスを入力してください。</p>
+          </div>
+        </div>
+
+        <%= form_for(resource,
+                     as: resource_name,
+                     url: password_path(resource_name),
+                     html: {
+                       method: :post,
+                       class: "training-form"
+                     }) do |f| %>
+
+          <%= render "devise/shared/error_messages", resource: resource %>
+
+          <div class="form-field">
+            <%= f.label :email, "メールアドレス", class: "form-label" %>
+            <%= f.email_field :email,
+                              autofocus: true,
+                              autocomplete: "email",
+                              class: "form-control" %>
+          </div>
+
+          <div class="form-submit-area">
+            <%= f.submit "再設定メールを送信する",
+                         class: "form-submit-button" %>
+          </div>
+        <% end %>
+
+        <div class="auth-links">
+          <%= render "devise/shared/links" %>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>

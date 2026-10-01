@@ -1,0 +1,57 @@
+<div class="records-page">
+  <div class="records-shell">
+    <header class="subpage-header">
+      <h1>ジムログ</h1>
+      <p class="subpage-description">
+        ログインして、トレーニングの続きを記録しましょう。
+      </p>
+    </header>
+
+    <main class="record-form-main">
+      <section class="record-form-card">
+        <div class="form-introduction">
+          <div>
+            <h2>ログイン</h2>
+            <p>メールアドレスとパスワードを入力してください。</p>
+          </div>
+        </div>
+
+        <%= form_for(resource,
+                     as: resource_name,
+                     url: session_path(resource_name),
+                     html: { class: "training-form" }) do |f| %>
+
+          <div class="form-field">
+            <%= f.label :email, "メールアドレス", class: "form-label" %>
+            <%= f.email_field :email,
+                              autofocus: true,
+                              autocomplete: "email",
+                              class: "form-control" %>
+          </div>
+
+          <div class="form-field">
+            <%= f.label :password, "パスワード", class: "form-label" %>
+            <%= f.password_field :password,
+                                 autocomplete: "current-password",
+                                 class: "form-control" %>
+          </div>
+
+          <% if devise_mapping.rememberable? %>
+            <div class="form-label">
+              <%= f.check_box :remember_me %>
+              <%= f.label :remember_me, "ログイン状態を保持する" %>
+            </div>
+          <% end %>
+
+          <div class="form-submit-area">
+            <%= f.submit "ログイン", class: "form-submit-button" %>
+          </div>
+        <% end %>
+
+        <div class="auth-links">
+          <%= render "devise/shared/links" %>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
