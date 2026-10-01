@@ -848,3 +848,59 @@
     text-align: center;
   }
 }
+
+/* 認証画面の補助リンク */
+
+.auth-links {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(148, 163, 184, 0.15);
+  text-align: center;
+  font-size: 12px;
+  line-height: 2;
+}
+
+.auth-links a {
+  display: inline-block;
+  padding: 4px 8px;
+  color: #38bdf8;
+  text-decoration: none;
+}
+
+.auth-links a:hover {
+  text-decoration: underline;
+}
+
+.auth-links a:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* 認証画面の入力エラー */
+
+.record-form-card #error_explanation {
+  padding: 12px 14px;
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  border-radius: 10px;
+  background: rgba(127, 29, 29, 0.22);
+  color: #fca5a5;
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.record-form-card #error_explanation h2 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.record-form-card #error_explanation ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.record-form-card #error_explanation li + li {
+  margin-top: 4px;
+}
