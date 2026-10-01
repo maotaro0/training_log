@@ -1,7 +1,21 @@
-<h1>種目を編集</h1>
+<div class="records-page">
+  <div class="records-shell">
+    <header class="subpage-header">
+      <h1>種目を編集</h1>
+      <p class="subpage-description">
+        種目名を確認して変更してください。
+      </p>
+    </header>
 
-<%= render "form", exercise: @exercise %>
+    <main class="record-form-main">
+      <section class="record-form-card">
+        <%= render "form", exercise: @exercise %>
 
-<div>
-  <%= link_to "種目一覧に戻る", exercises_path %>
+        <%= link_to "種目一覧に戻る",
+                    exercises_path,
+                    class: "form-cancel-button" %>
+      </section>
+    </main>
+    <%= render "shared/bottom_nav", active: nil %>
+  </div>
 </div>
