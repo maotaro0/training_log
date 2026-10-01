@@ -832,3 +832,56 @@
       minmax(0, 1fr);
   }
 }
+
+/* 今月・継続カードのサイズ変更 */
+
+.status-card {
+  min-height: 56px;
+  padding: 6px;
+  gap: 8px;
+}
+
+.status-icon {
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  font-size: 16px;
+}
+
+.status-content {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 6px;
+}
+
+.status-label {
+  font-size: 10px;
+  line-height: 1.2;
+}
+
+.status-number {
+  margin-top: 0;
+  gap: 3px;
+}
+
+.status-number strong {
+  font-size: 20px;
+}
+
+.status-number span {
+  font-size: 10px;
+}
+
+.status-progress {
+  grid-column: 1 / -1;
+  height: 4px;
+  margin-top: 3px;
+}
+
+.status-note {
+  grid-column: 1 / -1;
+  margin-top: 3px;
+  font-size: 8px;
+  line-height: 1.2;
+}
