@@ -1,0 +1,35 @@
+<div class="records-page">
+  <div class="records-shell">
+    <header class="subpage-header">
+      <h1>マイページ</h1>
+      <p class="subpage-description">
+        プロフィールやアカウント情報を確認できます。
+      </p>
+    </header>
+
+    <main class="record-form-main">
+      <section class="record-form-card">
+        <div class="form-introduction">
+          <div>
+            <h2>プロフィール</h2>
+          </div>
+        </div>
+
+        <div class="training-form">
+          <div class="form-field">
+            <span class="form-label">名前</span>
+            <strong><%= @profile.name.presence || "名前未設定" %></strong>
+          </div>
+
+          <div class="form-field">
+            <span class="form-label">メールアドレス</span>
+            <span><%= current_user.email %></span>
+          </div>
+        </div>
+        <%= link_to "プロフィールを編集", edit_profile_path, class: "records-primary-button" %>
+        <%= link_to "アカウント設定", edit_user_registration_path, class: "records-primary-button" %>
+      </section>
+    </main>
+    <%= render "shared/bottom_nav", active: :settings %>
+  </div>
+</div>

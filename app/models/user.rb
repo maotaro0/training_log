@@ -6,6 +6,7 @@ class User < ApplicationRecord
          :validatable
 
   has_many :training_records
+  has_one :profile, dependent: :destroy
 
   def monthly_training_count
      training_records
