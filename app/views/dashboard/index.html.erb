@@ -127,15 +127,27 @@
             <% end %>
 
 
-            <button
-              type="button"
-              class="hero-button hero-button-secondary"
-              disabled>
+            
+   <% if @latest_record.present? %>
 
-              <span class="hero-button-icon">▣</span>
-              <span>前回コピー開始</span>
+    <%= link_to new_training_record_path(copy_previous: true),
+              class: "hero-button hero-button-secondary" do %>
 
-            </button>
+      <span class="hero-button-icon">▣</span>
+      <span>前回と同じ重量で記録</span>
+    <% end %>
+  <% else %>
+
+  <button
+    type="button"
+    class="hero-button hero-button-secondary"
+    disabled>
+
+    <span class="hero-button-icon">▣</span>
+    <span>前回と同じ重量で記録</span>
+    </button>
+  <% end %>
+
 
           </div>
         </div>
