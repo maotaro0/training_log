@@ -39,7 +39,24 @@ class TrainingRecordsController < ApplicationController
   end
 
   def new
-    @training_record = TrainingRecord.new
+    @training_record = current_user.training_records.new(
+      training_day: Date.current
+    )
+
+    return unless params[:copy_previous] == "true"
+
+    previous_record = current_user.training_records
+                    .order(training_day: :desc, created_at: :desc)
+                    .first
+
+    return if previous_record.nil?
+
+    @training_record.assign_attributes(
+      exercise_id: previous_record.exercise_id,
+      weight_kg: previous_record.weight_kg,
+      reps: previous_record.reps,
+      set_count: previous_record.set_count
+    )
   end
 
   def create
