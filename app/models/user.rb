@@ -7,6 +7,7 @@ class User < ApplicationRecord
 
   has_many :training_records
   has_one :profile, dependent: :destroy
+  has_many :workouts, dependent: :destroy
 
   def monthly_training_count
      training_records

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_10_01_214332) do
+ActiveRecord::Schema[7.1].define(version: 2026_10_12_144400) do
   create_table "exercises", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -51,7 +51,41 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_01_214332) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "workout_records", force: :cascade do |t|
+    t.integer "workout_id", null: false
+    t.integer "exercise_id", null: false
+    t.text "memo"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["exercise_id"], name: "index_workout_records_on_exercise_id"
+    t.index ["workout_id"], name: "index_workout_records_on_workout_id"
+  end
+
+  create_table "workout_sets", force: :cascade do |t|
+    t.integer "workout_record_id", null: false
+    t.integer "set_number"
+    t.decimal "weight_kg", precision: 6, scale: 2
+    t.integer "reps"
+    t.boolean "is_pr", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["workout_record_id"], name: "index_workout_sets_on_workout_record_id"
+  end
+
+  create_table "workouts", force: :cascade do |t|
+    t.date "date"
+    t.text "memo"
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_workouts_on_user_id"
+  end
+
   add_foreign_key "profiles", "users"
   add_foreign_key "training_records", "exercises"
   add_foreign_key "training_records", "users"
+  add_foreign_key "workout_records", "exercises"
+  add_foreign_key "workout_records", "workouts"
+  add_foreign_key "workout_sets", "workout_records"
+  add_foreign_key "workouts", "users"
 end
