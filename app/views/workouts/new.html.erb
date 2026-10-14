@@ -1,0 +1,69 @@
+<h1>新しいトレーニング記録</h1>
+
+<% if @workout.errors.any? %>
+  <div>
+    <h2>入力内容を確認してください</h2>
+
+    <ul>
+      <% @workout.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_with model: @workout do |form| %>
+
+  <div>
+    <%= form.label :date, "トレーニング日" %>
+    <%= form.date_field :date, required: true %>
+  </div>
+
+  <div>
+    <%= form.label :memo, "メモ" %>
+    <%= form.text_area :memo %>
+  </div>
+
+  <%= form.fields_for :workout_records do |record_form| %>
+    <hr>
+
+    <h2>種目 <%= record_form.index + 1 %></h2>
+
+    <div>
+      <%= record_form.label :exercise_id, "種目名" %>
+
+      <%= record_form.collection_select(
+        :exercise_id,
+        @exercises,
+        :id,
+        :name,
+        { prompt: "種目を選択してください" },
+        { required: true }
+      ) %>
+    </div>
+
+    <%= record_form.fields_for :workout_sets do |set_form| %>
+      <div>
+        <h3><%= set_form.object.set_number %>セット目</h3>
+
+        <%= set_form.hidden_field :set_number %>
+
+        <%= set_form.label :weight_kg, "重量（kg）" %>
+        <%= set_form.number_field :weight_kg,
+                                  step: 0.5,
+                                  min: 0 %>
+
+        <%= set_form.label :reps, "回数" %>
+        <%= set_form.number_field :reps,
+                                  min: 1,
+                                  required: true %>
+      </div>
+    <% end %>
+
+  <% end %>
+
+  <div>
+    <%= form.submit "トレーニングを保存" %>
+  </div>
+
+<% end %>
