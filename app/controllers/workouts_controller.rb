@@ -4,13 +4,8 @@ class WorkoutsController < ApplicationController
   def new
     @workout = current_user.workouts.new(date: Date.current)
 
-    2.times do
-      record = @workout.workout_records.build
-
-      2.times do |index|
-        record.workout_sets.build(set_number: index + 1)
-      end
-    end
+    record = @workout.workout_records.build
+    record.workout_sets.build(set_number: 1)
 
     @exercises = Exercise.order(:name)
   end

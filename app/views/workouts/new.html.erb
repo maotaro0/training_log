@@ -12,7 +12,9 @@
   </div>
 <% end %>
 
-<%= form_with model: @workout do |form| %>
+<div data-controller="workout-form">
+  <%= form_with model: @workout do |form| %>
+  
 
   <div>
     <%= form.label :date, "トレーニング日" %>
@@ -24,43 +26,28 @@
     <%= form.text_area :memo %>
   </div>
 
-  <%= form.fields_for :workout_records do |record_form| %>
-    <hr>
-
-    <h2>種目 <%= record_form.index + 1 %></h2>
-
-    <div>
-      <%= record_form.label :exercise_id, "種目名" %>
-
-      <%= record_form.collection_select(
-        :exercise_id,
-        @exercises,
-        :id,
-        :name,
-        { prompt: "種目を選択してください" },
-        { required: true }
-      ) %>
+  <div data-workout-form-target="records">
+      <%= form.fields_for :workout_records do |record_form| %>
+        <%= render "record_fields",
+                   record_form: record_form,
+                   exercises: @exercises %>
+      <% end %>
     </div>
 
-    <%= record_form.fields_for :workout_sets do |set_form| %>
-      <div>
-        <h3><%= set_form.object.set_number %>セット目</h3>
+    <template data-workout-form-target="recordTemplate">
+      <%= form.fields_for :workout_records,
+                          WorkoutRecord.new,
+                          child_index: "NEW_RECORD" do |record_form| %>
+        <%= render "record_fields",
+                   record_form: record_form,
+                   exercises: @exercises %>
+      <% end %>
+    </template>
 
-        <%= set_form.hidden_field :set_number %>
-
-        <%= set_form.label :weight_kg, "重量（kg）" %>
-        <%= set_form.number_field :weight_kg,
-                                  step: 0.5,
-                                  min: 0 %>
-
-        <%= set_form.label :reps, "回数" %>
-        <%= set_form.number_field :reps,
-                                  min: 1,
-                                  required: true %>
-      </div>
-    <% end %>
-
-  <% end %>
+    <button type="button"
+            data-action="click->workout-form#addRecord">
+      ＋種目を追加
+    </button>
 
   <div>
     <%= form.submit "トレーニングを保存" %>
