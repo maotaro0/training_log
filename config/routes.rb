@@ -5,6 +5,6 @@ Rails.application.routes.draw do
   
   resource :profile, only: [:show, :edit, :update]
   resources :training_records,only: [:index, :new, :create, :edit, :update, :destroy]
-  resources :workouts, only: [:new, :create]
+  resources :workouts, only: [:index, :show,  :new, :create]
   resources :exercises,only: [:index, :new, :create, :edit, :update, :destroy]
 end
