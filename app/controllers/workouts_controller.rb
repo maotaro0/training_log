@@ -1,5 +1,17 @@
 class WorkoutsController < ApplicationController
   before_action :authenticate_user!
+  def index
+    @workouts = current_user.workouts
+                            .includes(workout_records: :workout_sets)
+                            .includes(workout_records: :exercise)
+                            .order(date: :desc, created_at: :desc)
+  end
+
+  def show
+    @workout = current_user.workouts
+                           .includes(workout_records: [:exercise, :workout_sets])
+                           .find(params[:id])
+  end
 
   def new
     @workout = current_user.workouts.new(date: Date.current)
@@ -14,7 +26,7 @@ class WorkoutsController < ApplicationController
     @workout = current_user.workouts.new(workout_params)
 
     if @workout.save
-      redirect_to root_path,
+      redirect_to workout_path(@workout),
                   notice: "トレーニングを保存しました。"
     else
       @exercises = Exercise.order(:name)

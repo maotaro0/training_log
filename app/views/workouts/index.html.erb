@@ -1,0 +1,39 @@
+<h1>トレーニング履歴</h1>
+
+<p>
+  <%= link_to "＋新しい記録を作成", new_workout_path %>
+</p>
+
+<% if @workouts.any? %>
+  <% @workouts.each do |workout| %>
+    <section>
+      <hr>
+
+      <h2>
+        <%= link_to workout.date.strftime("%Y年%m月%d日"),
+                    workout_path(workout) %>
+      </h2>
+
+      <p>
+        <%= workout.workout_records.size %>種目 /
+        <%= workout.workout_records.sum { |record| record.workout_sets.size } %>セット
+      </p>
+
+      <ul>
+        <% workout.workout_records.each do |record| %>
+          <li>
+            <%= record.exercise.name %>
+          </li>
+        <% end %>
+      </ul>
+
+      <%= link_to "詳細を見る", workout_path(workout) %>
+    </section>
+  <% end %>
+<% else %>
+  <p>まだトレーニング記録がありません。</p>
+<% end %>
+
+<hr>
+
+<%= link_to "ダッシュボードに戻る", root_path %>

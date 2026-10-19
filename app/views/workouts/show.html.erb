@@ -1,0 +1,65 @@
+<h1>トレーニング詳細</h1>
+
+<h2>
+  <%= @workout.date.strftime("%Y年%m月%d日") %>
+</h2>
+
+<% if @workout.memo.present? %>
+  <p>
+    メモ：<%= @workout.memo %>
+  </p>
+<% end %>
+
+<% @workout.workout_records.each do |record| %>
+  <section>
+    <hr>
+
+    <h3><%= record.exercise.name %></h3>
+
+    <% if record.memo.present? %>
+      <p><%= record.memo %></p>
+    <% end %>
+
+    <table>
+      <thead>
+        <tr>
+          <th>セット</th>
+          <th>重量</th>
+          <th>回数</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% record.workout_sets.sort_by(&:set_number).each do |set| %>
+          <tr>
+            <td><%= set.set_number %></td>
+
+            <td>
+              <% if set.weight_kg.present? %>
+                <%= number_with_precision(
+                      set.weight_kg,
+                      precision: 1,
+                      strip_insignificant_zeros: true
+                    ) %>kg
+              <% else %>
+                自重
+              <% end %>
+            </td>
+
+            <td><%= set.reps %>回</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
+<% end %>
+
+<hr>
+
+<p>
+  <%= link_to "履歴一覧に戻る", workouts_path %>
+</p>
+
+<p>
+  <%= link_to "＋新しい記録を作成", new_workout_path %>
+</p>
