@@ -11,7 +11,7 @@
   <% end %>
 
 
-  <%= link_to new_training_record_path,
+  <%= link_to new_workout_path,
               class: "nav-item #{'nav-item-active' if active == :record}" do %>
 
     <span class="nav-symbol nav-plus">＋</span>
@@ -20,7 +20,7 @@
   <% end %>
 
 
-  <%= link_to training_records_path,
+  <%= link_to workouts_path,
               class: "nav-item #{'nav-item-active' if active == :analysis}" do %>
 
     <span class="nav-symbol">▥</span>

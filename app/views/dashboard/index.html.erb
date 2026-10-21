@@ -87,69 +87,60 @@
             TODAY'S WORKOUT
           </p>
 
-          <% if @latest_record %>
+          <% if @latest_workout && @latest_record && @latest_set %>
 
-            <h2>
-              <%= @latest_record.exercise.name %> の日
-            </h2>
+    <h2>
+      <%= @latest_record.exercise.name %> の日
+    </h2>
 
-            <p class="hero-description">
-              前回は
-              <% if @latest_record.weight_kg.present? %>
-                <%= number_with_precision(
-                      @latest_record.weight_kg,
-                      precision: 1,
-                      strip_insignificant_zeros: true
-                    ) %>kg
-              <% else %>
-                自重
-              <% end %>
+    <p class="hero-description">
+      前回は
 
-              × <%= @latest_record.reps %>回。
+      <% if @latest_set.weight_kg.present? %>
+        <%= number_with_precision(
+            @latest_set.weight_kg,
+            precision: 1,
+            strip_insignificant_zeros: true
+          ) %>kg
+      <% else %>
+        自重
+      <% end %>
 
-              今日も前回の自分を超えていきましょう。
-            </p>
+      × <%= @latest_set.reps %>回。
 
-          <% else %>
+      今日も前回の自分を超えていきましょう。
+    </p>
 
-            <h2>今日のトレーニング</h2>
-
-            <p class="hero-description">
-              最初のトレーニングを記録してみましょう。
-            </p>
-
-          <% end %>
-
-
-          <div class="hero-actions">
-
-            <%= link_to new_training_record_path,
-                        class: "hero-button hero-button-primary" do %>
-
-              <span class="hero-button-icon">▶</span>
-              <span>新しく記録開始</span>
-
-            <% end %>
-
-
-            
-   <% if @latest_record.present? %>
-
-    <%= link_to new_training_record_path(copy_previous: true),
-              class: "hero-button hero-button-secondary" do %>
-
-      <span class="hero-button-icon">▣</span>
-      <span>前回と同じ重量で記録</span>
-    <% end %>
   <% else %>
 
-  <button
-    type="button"
-    class="hero-button hero-button-secondary"
-    disabled>
+  <h2>今日のトレーニング</h2>
 
-    <span class="hero-button-icon">▣</span>
-    <span>前回と同じ重量で記録</span>
+    <p class="hero-description">
+      最初のトレーニングを記録してみましょう。
+    </p>
+
+  <% end %>
+
+          <div class="hero-actions">
+  <%= link_to new_workout_path,
+            class: "hero-button hero-button-primary" do %>
+    <span class="hero-button-icon">▶</span>
+    <span>新しく記録開始</span>
+  <% end %>
+
+  <% if @latest_workout %>
+    <%= link_to new_workout_path(copy_previous: true),
+              class: "hero-button hero-button-secondary" do %>
+      <span class="hero-button-icon">▣</span>
+      <span>前回のセットをコピー</span>
+    <% end %>
+  <% else %>
+    <button
+      type="button"
+      class="hero-button hero-button-secondary"
+      disabled>
+      <span class="hero-button-icon">▣</span>
+      <span>前回のセットをコピー</span>
     </button>
   <% end %>
 
@@ -164,9 +155,9 @@
         <div class="card-header">
 
           <div class="card-title">
-            <span class="card-title-icon growth-icon">▥</span>
-            <h2>直近の成長ハイライト</h2>
-          </div>
+            <%= link_to "すべて見る ›",
+            workouts_path,
+            class: "card-link" %>
 
           <%= link_to "すべて見る ›",
                       training_records_path,
@@ -175,85 +166,52 @@
         </div>
 
 
-        <% if @growth_record %>
+  <% if @growth_record %>
 
-          <% difference = @growth_record.weight_difference %>
+    <div class="growth-box">
+      <div class="exercise-icon">
+        🏋
+      </div>
 
-          <div class="growth-box">
+      <div class="growth-info">
+        <strong class="growth-name">
+          <%= @growth_record.name %>
+        </strong>
 
-            <div class="exercise-icon">
-              🏋
-            </div>
-
-            <div class="growth-info">
-
-              <strong class="growth-name">
-                <%= @growth_record.exercise.name %>
-              </strong>
-
-
-              <% if difference > 0 %>
-
-                <span class="growth-badge growth-positive">
-                  +<%= number_with_precision(
-                        difference,
-                        precision: 1,
-                        strip_insignificant_zeros: true
-                      ) %>kg UP!
-                </span>
-
-              <% elsif difference == 0 %>
-
-                <span class="growth-badge growth-neutral">
-                  ±0kg
-                </span>
-
-              <% else %>
-
-                <span class="growth-badge growth-negative">
-                  <%= number_with_precision(
-                        difference,
-                        precision: 1,
-                        strip_insignificant_zeros: true
-                      ) %>kg
-                </span>
-
-              <% end %>
-
-
-              <% if @personal_best_record %>
-
-                <p class="personal-best">
-                  自己ベスト：
-
-                  <%= number_with_precision(
-                        @personal_best_record.weight_kg,
-                        precision: 1,
-                        strip_insignificant_zeros: true
-                      ) %>kg
-
-                  （<%= @personal_best_record.reps %>回）
-                </p>
-
-              <% end %>
-
-            </div>
-
-            <div class="growth-message">
-              昨日の自分を<br>
-              超えていこう。
-            </div>
-
-          </div>
-
+        <% if @weight_difference > 0 %>
+          <span class="growth-badge growth-positive">
+            +<%= @weight_difference.round(1) %>kg UP!
+          </span>
+        <% elsif @weight_difference == 0 %>
+          <span class="growth-badge growth-neutral">
+            ±0kg
+          </span>
         <% else %>
-
-          <p class="empty-message">
-            同じ種目を2回以上記録すると、
-            ここに成長が表示されます。
-          </p>
-
+          <span class="growth-badge growth-negative">
+            <%= @weight_difference.round(1) %>kg
+          </span>
         <% end %>
+
+        <p class="personal-best">
+          自己ベスト：
+          <%= @personal_best_weight.round(1) %>kg
+        </p>
+      </div>
+
+      <div class="growth-message">
+        昨日の自分を<br>
+        超えていこう。
+      </div>
+    </div>
+
+  <% else %>
+
+    <p class="empty-message">
+      同じ種目の重量を異なる2日以上記録すると、
+      ここに成長が表示されます。
+    </p>
+
+  <% end %>
 
       </section>
 
@@ -320,85 +278,79 @@
       </section>
 
 
-      <section class="dashboard-card recent-card">
+<section class="dashboard-card recent-card">
 
-        <div class="card-header">
+  <div class="card-header">
+    <div class="card-title">
+      <span class="card-title-icon history-icon">◴</span>
 
-          <div class="card-title">
-            <span class="card-title-icon history-icon">◴</span>
+      <h2>
+        前回の記録
 
-            <h2>
-              前回の記録
+        <% if @latest_workout %>
+          （<%= @latest_workout.date.strftime("%m/%d") %>）
+        <% end %>
+      </h2>
+    </div>
 
-              <% if @latest_record %>
-                （<%= @latest_record.training_day.strftime("%m/%d") %>）
-              <% end %>
-            </h2>
-          </div>
+    <%= link_to "すべて見る ›",
+                workouts_path,
+                class: "card-link" %>
+  </div>
 
-          <%= link_to "すべて見る ›",
-                      training_records_path,
-                      class: "card-link" %>
+  <% if @latest_workout %>
 
+    <% @latest_workout.workout_records.each do |record| %>
+
+      <%= link_to workout_path(@latest_workout),
+                  class: "recent-record-row" do %>
+
+        <div class="exercise-icon">
+          🏋
         </div>
 
+        <div class="recent-record-info">
+          <strong>
+            <%= record.exercise.name %>
+          </strong>
 
-        <% if @latest_record %>
-
-          <%= link_to edit_training_record_path(@latest_record),
-                      class: "recent-record-row" do %>
-
-            <div class="exercise-icon">
-              🏋
-            </div>
-
-            <div class="recent-record-info">
-
-              <strong>
-                <%= @latest_record.exercise.name %>
-              </strong>
-
-              <p>
-
-                <% if @latest_record.weight_kg.present? %>
-
-                  <%= number_with_precision(
-                        @latest_record.weight_kg,
-                        precision: 1,
-                        strip_insignificant_zeros: true
-                      ) %>kg
-
-                <% else %>
-
-                  自重
-
-                <% end %>
-
-                × <%= @latest_record.reps %>回
-
-                &nbsp;
-
-                <%= @latest_record.set_count %>セット
-
-              </p>
-
-            </div>
-
-            <span class="recent-arrow">
-              ›
-            </span>
-
-          <% end %>
-
-        <% else %>
-
-          <p class="empty-message">
-            まだトレーニング記録がありません。
+          <p>
+            <%= record.workout_sets.size %>セット
           </p>
 
-        <% end %>
+          <% record.workout_sets.sort_by(&:set_number).each do |set| %>
+            <p>
+              <%= set.set_number %>セット目：
 
-      </section>
+              <% if set.weight_kg.present? %>
+                <%= number_with_precision(
+                      set.weight_kg,
+                      precision: 1,
+                      strip_insignificant_zeros: true
+                    ) %>kg
+              <% else %>
+                自重
+              <% end %>
+
+              × <%= set.reps %>回
+            </p>
+          <% end %>
+        </div>
+
+        <span class="recent-arrow">›</span>
+
+      <% end %>
+    <% end %>
+
+  <% else %>
+
+    <p class="empty-message">
+      まだトレーニング記録がありません。
+    </p>
+
+  <% end %>
+
+</section>
 
     </main>
 
