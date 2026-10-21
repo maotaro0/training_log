@@ -63,3 +63,8 @@
 <p>
   <%= link_to "＋新しい記録を作成", new_workout_path %>
 </p>
+
+<p>
+  <%= link_to "このトレーニングをコピーして記録",
+              new_workout_path(copy_from: @workout.id) %>
+</p>

@@ -16,10 +16,40 @@ class WorkoutsController < ApplicationController
   def new
     @workout = current_user.workouts.new(date: Date.current)
 
-    record = @workout.workout_records.build
-    record.workout_sets.build(set_number: 1)
-
     @exercises = Exercise.order(:name)
+
+  source_workout =
+    if params[:copy_from].present?
+      current_user.workouts
+                  .includes(workout_records: :workout_sets)
+                  .find(params[:copy_from])
+    elsif params[:copy_previous] == "true"
+      current_user.workouts
+                  .includes(workout_records: :workout_sets)
+                  .order(date: :desc, created_at: :desc)
+                  .first
+    end
+
+    if source_workout
+    source_workout.workout_records.each do |source_record|
+      new_record = @workout.workout_records.build(
+        exercise_id: source_record.exercise_id
+      )
+
+      source_record.workout_sets.sort_by(&:set_number).each do |source_set|
+        new_record.workout_sets.build(
+          set_number: source_set.set_number,
+          weight_kg: source_set.weight_kg,
+          reps: source_set.reps
+        )
+      end
+    end
+  end
+
+    if @workout.workout_records.empty?
+      record = @workout.workout_records.build
+      record.workout_sets.build(set_number: 1)
+    end
   end
 
   def create

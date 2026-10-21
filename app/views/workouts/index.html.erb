@@ -3,6 +3,12 @@
 <p>
   <%= link_to "＋新しい記録を作成", new_workout_path %>
 </p>
+<% if @workouts.any? %>
+  <p>
+    <%= link_to "前回の内容をコピーして記録",
+                new_workout_path(copy_previous: true) %>
+  </p>
+<% end %>
 
 <% if @workouts.any? %>
   <% @workouts.each do |workout| %>
