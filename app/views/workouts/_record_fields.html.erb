@@ -1,19 +1,21 @@
-<section data-workout-form-record>
-  <hr>
 
-  <h2>トレーニング種目</h2>
+<section class="workouts-card" data-workout-form-record>
 
-  <div>
+  <h2 class="workouts-card-title">
+    トレーニング種目
+  </h2>
+
+  <div class="workouts-field">
     <%= record_form.label :exercise_id, "種目名" %>
 
     <%= record_form.collection_select(
-      :exercise_id,
-      exercises,
-      :id,
-      :name,
-      { prompt: "種目を選択してください" },
-      { required: true }
-    ) %>
+          :exercise_id,
+          exercises,
+          :id,
+          :name,
+          { prompt: "種目を選択してください" },
+          { required: true }
+        ) %>
   </div>
 
   <div data-workout-form-sets>
@@ -30,13 +32,18 @@
     <% end %>
   </template>
 
-  <button type="button"
-          data-action="click->workout-form#addSet">
+  <button
+    type="button"
+    class="workouts-button workouts-button-secondary"
+    data-action="click->workout-form#addSet">
     ＋セットを追加
   </button>
 
-  <button type="button"
-          data-action="click->workout-form#removeRecord">
+  <button
+    type="button"
+    class="workouts-button workouts-button-danger"
+    data-action="click->workout-form#removeRecord">
     この種目を削除
   </button>
+
 </section>

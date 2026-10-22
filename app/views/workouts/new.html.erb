@@ -1,57 +1,81 @@
-<h1>新しいトレーニング記録</h1>
 
-<% if @workout.errors.any? %>
-  <div>
-    <h2>入力内容を確認してください</h2>
+<div class="workouts-page">
+  <div class="workouts-shell">
 
-    <ul>
-      <% @workout.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </ul>
-  </div>
-<% end %>
+    <h1 class="workouts-title">
+      新しいトレーニング記録
+    </h1>
 
-<div data-controller="workout-form">
-  <%= form_with model: @workout do |form| %>
-  
+    <p class="workouts-subtitle">
+      今日のトレーニングを記録しましょう。
+    </p>
 
-  <div>
-    <%= form.label :date, "トレーニング日" %>
-    <%= form.date_field :date, required: true %>
-  </div>
+    <% if @workout.errors.any? %>
+      <div class="workouts-errors">
+        <h2>入力内容を確認してください</h2>
 
-  <div>
-    <%= form.label :memo, "メモ" %>
-    <%= form.text_area :memo %>
-  </div>
+        <ul>
+          <% @workout.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
 
-  <div data-workout-form-target="records">
-      <%= form.fields_for :workout_records do |record_form| %>
-        <%= render "record_fields",
-                   record_form: record_form,
-                   exercises: @exercises %>
+    <div data-controller="workout-form">
+      <%= form_with model: @workout do |form| %>
+
+        <section class="workouts-card">
+          <h2 class="workouts-card-title">
+            トレーニング情報
+          </h2>
+
+          <div class="workouts-field">
+            <%= form.label :date, "トレーニング日" %>
+            <%= form.date_field :date, required: true %>
+          </div>
+
+          <div class="workouts-field">
+            <%= form.label :memo, "メモ" %>
+            <%= form.text_area :memo,
+                              placeholder: "今日の体調や目標など" %>
+          </div>
+        </section>
+
+        <div data-workout-form-target="records">
+          <%= form.fields_for :workout_records do |record_form| %>
+            <%= render "record_fields",
+                       record_form: record_form,
+                       exercises: @exercises %>
+          <% end %>
+        </div>
+
+        <template data-workout-form-target="recordTemplate">
+          <%= form.fields_for :workout_records,
+                              WorkoutRecord.new,
+                              child_index: "NEW_RECORD" do |record_form| %>
+            <%= render "record_fields",
+                       record_form: record_form,
+                       exercises: @exercises %>
+          <% end %>
+        </template>
+
+        <button
+          type="button"
+          class="workouts-button workouts-button-secondary"
+          data-action="click->workout-form#addRecord">
+          ＋種目を追加
+        </button>
+
+        <%= form.submit "トレーニングを保存",
+                        class: "workouts-button" %>
+
       <% end %>
     </div>
 
-    <template data-workout-form-target="recordTemplate">
-      <%= form.fields_for :workout_records,
-                          WorkoutRecord.new,
-                          child_index: "NEW_RECORD" do |record_form| %>
-        <%= render "record_fields",
-                   record_form: record_form,
-                   exercises: @exercises %>
-      <% end %>
-    </template>
+    <%= link_to "← ダッシュボードに戻る",
+                root_path,
+                class: "workouts-back-link" %>
 
-    <button type="button"
-            data-action="click->workout-form#addRecord">
-      ＋種目を追加
-    </button>
-
-  <div>
-    <%= form.submit "トレーニングを保存" %>
   </div>
-
-<% end %>
 </div>
