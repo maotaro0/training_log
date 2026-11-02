@@ -15,10 +15,7 @@
         </div>
       </div>
 
-      <button class="notification-button" type="button">
-        ♢
-        <span class="notification-dot"></span>
-      </button>
+<%= link_to "マイページ", profile_path, class: "card-link" %>
     </header>
 
 
@@ -45,9 +42,7 @@
               <span>回</span>
             </div>
 
-            <div class="status-progress">
-              <div class="status-progress-bar"></div>
-            </div>
+
 
             <p class="status-note">
               今月も積み上げ中
@@ -62,15 +57,15 @@
           </div>
 
           <div class="status-content">
-            <p class="status-label">継続</p>
+            <p class="status-label">累計記録</p>
 
             <div class="status-number">
-              <strong>―</strong>
+              <strong><%= @total_training_days %></strong>
               <span>日</span>
             </div>
 
             <p class="status-note">
-              連続日数は今後追加予定
+              トレーニングした日数
             </p>
           </div>
         </div>

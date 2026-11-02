@@ -225,3 +225,28 @@
     font-size: 21px;
   }
 }
+
+body { margin: 0; background: #08111b; }
+[hidden] { display: none !important; }
+.workouts-shell { box-sizing: border-box; overflow-wrap: anywhere; }
+.workouts-card { min-width: 0; }
+.workouts-set-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.workouts-set-grid .workouts-field { margin: 0; }
+.workouts-field input, .workouts-field select, .workouts-field textarea { min-width: 0; max-width: 100%; }
+.workouts-actions { margin-bottom: 24px; }
+.workouts-table-scroll { overflow-x: auto; }
+.workouts-memo { color: #cbd5e1; line-height: 1.8; overflow-wrap: anywhere; }
+.workouts-pagination { display: flex; justify-content: space-between; gap: 16px; }
+.workouts-card p { line-height: 1.7; }
+.workouts-card-title { overflow-wrap: anywhere; }
+.workouts-button:disabled { opacity: .6; cursor: wait; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.flash-stack { position: fixed; z-index: 100; top: 12px; left: 50%; transform: translateX(-50%); width: min(calc(100% - 24px), 406px); }
+.app-flash { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px; margin-bottom: 8px; background: #164237; color: #e6fff5; border: 1px solid #63b79e; border-radius: 12px; box-shadow: 0 8px 25px #0006; font: 14px/1.6 sans-serif; }
+.app-flash-error { background: #40232c; color: #fecdd3; border-color: #b45362; }
+.app-flash button { color: inherit; background: transparent; border: 0; min-width: 36px; min-height: 36px; font-size: 24px; cursor: pointer; }
+.profile-avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+.records-primary-button { font-family: inherit; cursor: pointer; }
+.recent-record-row + .recent-record-row { margin-top: 10px; }
+.bottom-nav { padding-bottom: env(safe-area-inset-bottom); height: calc(78px + env(safe-area-inset-bottom)); }
+.workouts-shell, .dashboard-shell, .records-shell { padding-bottom: calc(100px + env(safe-area-inset-bottom)); }

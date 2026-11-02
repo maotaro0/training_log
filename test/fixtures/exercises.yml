@@ -1,7 +1,7 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
 one:
-  name: MyString
-
+  name: ベンチプレス
 two:
-  name: MyString
+  name: スクワット
+private:
+  name: 個人の種目
+  user: two

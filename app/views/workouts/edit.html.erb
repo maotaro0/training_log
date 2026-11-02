@@ -1,0 +1,7 @@
+<main class="workouts-page"><div class="workouts-shell">
+  <h1 class="workouts-title">トレーニングを編集</h1>
+  <p class="workouts-subtitle">種目やセットの追加・削除は「変更を保存」で反映されます。</p>
+  <%= render "form" %>
+  <%= link_to "変更をやめて詳細に戻る", workout_path(@workout), class: "workouts-back-link" %>
+  <%= render "shared/bottom_nav", active: :analysis %>
+</div></main>

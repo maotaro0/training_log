@@ -1,9 +1,9 @@
 source "https://rubygems.org"
 
-ruby "3.2.0"
+ruby "3.4.12"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 7.1.6"
+gem "rails", "~> 8.1.0"
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
@@ -45,7 +45,7 @@ gem "bootsnap", require: false
 
 group :development, :test do
   # ローカル開発・テストではSQLiteを使用
-  gem "sqlite3", ">= 1.4"
+  gem "sqlite3", "~> 2.1"
 
   # デバッグ用
   gem "debug", platforms: %i[ mri windows ]

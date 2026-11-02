@@ -1,18 +1,19 @@
 class User < ApplicationRecord
   devise :database_authenticatable,
          :registerable,
-         :recoverable,
          :rememberable,
          :validatable
 
-  has_many :training_records
+  has_many :training_records, dependent: :destroy
   has_one :profile, dependent: :destroy
   has_many :workouts, dependent: :destroy
+  has_many :exercises, dependent: :destroy
 
   def monthly_training_count
-     training_records
-      .where(training_day: Date.current.beginning_of_month..Date.current.end_of_month)
+     workouts
+      .where(date: Date.current.all_month)
       .distinct
-      .count(:training_day)
+      .count(:date)
    end
+
 end

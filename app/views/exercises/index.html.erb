@@ -20,11 +20,14 @@
             </div>
 
             <div class="history-actions">
+              <% if exercise.user_id.nil? %>
+                <span class="records-empty">共通種目</span>
+              <% else %>
               <%= link_to "編集",
                           edit_exercise_path(exercise),
                           class: "history-edit-button" %>
 
-              <% if exercise.training_records.exists? %>
+              <% if exercise.training_records.exists? || exercise.workout_records.exists? %>
                 <span class="records-empty">記録あり・削除不可</span>
               <% else %>
                 <%= button_to "削除",
@@ -36,6 +39,7 @@
                                 }
                               },
                               class: "history-delete-button" %>
+              <% end %>
               <% end %>
             </div>
           </section>

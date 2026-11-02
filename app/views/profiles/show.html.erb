@@ -28,6 +28,7 @@
         </div>
         <%= link_to "プロフィールを編集", edit_profile_path, class: "records-primary-button" %>
         <%= link_to "アカウント設定", edit_user_registration_path, class: "records-primary-button" %>
+        <%= button_to "ログアウト", destroy_user_session_path, method: :delete, class: "records-primary-button" %>
       </section>
     </main>
     <%= render "shared/bottom_nav", active: :settings %>

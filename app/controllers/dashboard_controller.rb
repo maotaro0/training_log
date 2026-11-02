@@ -7,6 +7,8 @@ class DashboardController < ApplicationController
       .distinct
       .count(:date)
 
+    @total_training_days = current_user.workouts.distinct.count(:date)
+
     @latest_workout = current_user.workouts
       .includes(workout_records: [:exercise, :workout_sets])
       .order(date: :desc, created_at: :desc)
@@ -62,7 +64,7 @@ class DashboardController < ApplicationController
       end
 
       @chart_labels = daily_max_weights.keys.map do |date|
-        date.strftime("%m/%d")
+        date.strftime("%Y/%m/%d")
       end
 
       @chart_weights = daily_max_weights.values
