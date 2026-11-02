@@ -29,16 +29,12 @@ class WorkoutsTest < ApplicationSystemTestCase
     assert_no_horizontal_overflow
     click_link "記録を編集"
     assert_text "トレーニングを編集"
-    puts "CONTROLLER: #{page.evaluate_script('(() => { const f = document.querySelector("form[data-controller=workout-form]"); const c = window.Stimulus.getControllerForElementAndIdentifier(f, "workout-form"); return { connected: !!c, records: c?.activeRecords().length, sets: c?.activeRecords().map(r => c.activeSets(r).length) }; })()').inspect}"
-    page.execute_script('window.formClicks = []; document.addEventListener("click", e => window.formClicks.push(e.target.outerHTML));')
     within all("[data-workout-form-record]").first do
-      within all("[data-workout-form-set]").first { click_button "セットを削除" }
+      within(all("[data-workout-form-set]").first) { click_button "セットを削除" }
     end
-    puts "AFTER_SET: #{page.evaluate_script('({ clicks: window.formClicks, hidden: document.querySelectorAll("[data-workout-form-set][hidden]").length })').inspect}"
-    within all("[data-workout-form-record]").last { click_button "この種目を削除" }
-    puts "AFTER_RECORD: #{page.evaluate_script('({ clicks: window.formClicks, hidden: document.querySelectorAll("[data-workout-form-record][hidden]").length })').inspect}"
-    puts "EDIT_FORM_DATA: #{page.evaluate_script('Array.from(new FormData(document.querySelector("form[data-controller=workout-form]")))').inspect}"
-    puts "BROWSER_LOGS: #{page.driver.browser.logs.get(:browser).map(&:message).inspect}"
+    within(all("[data-workout-form-record]").last) { click_button "この種目を削除" }
+    assert_selector "[data-workout-form-record]", count: 1
+    assert_selector "[data-workout-form-set]", count: 1
     save_screenshot Rails.root.join("tmp/screenshots/edit-mobile.png")
     click_button "変更を保存"
     assert_text "トレーニングを更新しました。"
@@ -57,6 +53,7 @@ class WorkoutsTest < ApplicationSystemTestCase
     assert_text "ゲスト体験中です"
     assert_selector "#weightProgressChart"
     assert page.evaluate_script("!!Chart.getChart(document.getElementById('weightProgressChart'))")
+    click_button "通知を閉じる"
     save_screenshot Rails.root.join("tmp/screenshots/home-mobile.png")
     assert_no_horizontal_overflow
 
