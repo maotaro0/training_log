@@ -10,7 +10,7 @@ class WorkoutsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "all main pages render" do
-    [root_path, workouts_path, workout_path(workouts(:one)), new_workout_path, edit_workout_path(workouts(:one)), exercises_path, profile_path].each do |path|
+    [root_path, workouts_path, workout_path(workouts(:one)), new_workout_path, edit_workout_path(workouts(:one)), exercises_path, new_exercise_path, profile_path, edit_profile_path, analysis_path].each do |path|
       get path
       assert_response :success, path
     end

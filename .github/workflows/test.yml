@@ -34,6 +34,11 @@ jobs:
         run: bundle exec rails db:prepare test
       - name: Browser tests
         run: bundle exec rails test:system
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sqlite-schema
+          path: db/schema.rb
       - name: Test PostgreSQL
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/training_log_test

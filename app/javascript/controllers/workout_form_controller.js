@@ -11,7 +11,11 @@ export default class extends Controller {
     this.activeRecords().forEach(record => this.renumberSets(record))
   }
 
-  nextId() { return "new_" + crypto.randomUUID().replaceAll("-", "") }
+  nextId() {
+    // Rails strong parameters recognize numeric keys as nested form entries.
+    this.lastId = Math.max(Date.now(), (this.lastId || 0) + 1)
+    return String(this.lastId)
+  }
 
   activeRecords() {
     return [...this.recordsTarget.querySelectorAll("[data-workout-form-record]")].filter(record => !record.hidden)
