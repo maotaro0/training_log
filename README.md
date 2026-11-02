@@ -73,6 +73,20 @@ RAILS_ENV=test bundle exec rails test:system
 
 ブラウザテストにはChromeが必要です。GitHub ActionsではSQLite・PostgreSQLでのテスト、スマホ幅のブラウザ操作、production用アセットの生成を確認します。ブラウザのスクリーンショットはActionsの成果物に保存します。
 
+### Windowsで全テストをまとめて実行
+
+通常のPowerShellで、Ruby 3.4.12（RubyInstaller）とChromeを用意して実行します。
+
+```powershell
+ruby bin/test-local.rb --setup
+```
+
+初回はMSYS2の開発ツールとGemfile.lockに固定された依存ライブラリをインストールし、SQLiteの全Railsテスト、全ブラウザテスト、本番用アセット生成を順番に実行します。準備済みなら `--setup` は省略できます。実行予定だけの確認は `--dry-run` を付けます。
+
+ログと成否・未実行項目は `tmp/local-test-results/日時/` に保存します。失敗時はそこで停止し、未実行の検査を成功扱いにしません。外部DBへの誤接続を避けるため、この実行では通常の `DATABASE_URL` を引き継ぎません。
+
+ローカルPostgreSQLも検査する場合のみ、`LOCAL_TEST_DATABASE_URL` にlocalhostの専用テストDB（名前の末尾が `_test`）を指定してください。指定がなければPostgreSQLの検査は未選択として結果に記載します。Renderへのアクセスやデプロイは行いません。
+
 ## Renderでの反映
 
 既存のRender Web ServiceとPostgreSQLを利用します。
