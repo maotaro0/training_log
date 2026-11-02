@@ -13,9 +13,10 @@ class DashboardController < ApplicationController
     @selected_exercise = @chart_exercises.find_by(id: params[:exercise_id]) || @chart_exercises.first
     if @selected_exercise
       @progress = ExerciseProgress.new(user: current_user, exercise: @selected_exercise)
-      values = @progress.values(:weight).compact
-      @weight_difference = values.last - values[-2] if values.length >= 2
-      @best_updated = values.any? && (values.length == 1 || values.last > values[0...-1].max)
+      values = @progress.values(:weight)
+      @weight_difference = values.last - values[-2] if values.length >= 2 && values.last && values[-2]
+      previous_best = values[0...-1].compact.max
+      @best_updated = values.last && (previous_best.nil? || values.last > previous_best)
     end
   end
 end

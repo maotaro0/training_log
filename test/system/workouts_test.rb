@@ -32,6 +32,7 @@ class WorkoutsTest < ApplicationSystemTestCase
       within all("[data-workout-form-set]").first { click_button "セットを削除" }
     end
     within all("[data-workout-form-record]").last { click_button "この種目を削除" }
+    puts "EDIT_FORM_DATA: #{page.evaluate_script('Array.from(new FormData(document.querySelector("form[data-controller=workout-form]")))').inspect}"
     click_button "変更を保存"
     assert_text "トレーニングを更新しました。"
     assert_text "55 kg"
@@ -52,7 +53,7 @@ class WorkoutsTest < ApplicationSystemTestCase
     save_screenshot Rails.root.join("tmp/screenshots/home-mobile.png")
     assert_no_horizontal_overflow
 
-    click_link "成長分析", exact: true
+    within(".bottom-nav") { click_link "成長分析" }
     select "合計回数", from: "指標"
     click_button "表示を更新"
     assert_selector "canvas[data-unit='回']"
@@ -60,7 +61,7 @@ class WorkoutsTest < ApplicationSystemTestCase
     save_screenshot Rails.root.join("tmp/screenshots/analysis-mobile.png")
     assert_no_horizontal_overflow
 
-    click_link "マイページ", exact: true
+    within(".bottom-nav") { click_link "マイページ" }
     click_link "プロフィールを編集"
     fill_in "名前", with: "テストゲスト"
     fill_in "月間目標（日数）", with: "15"
