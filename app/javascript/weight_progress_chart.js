@@ -13,6 +13,8 @@ document.addEventListener("turbo:load", () => {
     canvas.dataset.weights || "[]"
   );
 
+  const unit = canvas.dataset.unit || "kg";
+
   const existingChart = Chart.getChart(canvas);
 
   if (existingChart) {
@@ -73,7 +75,7 @@ document.addEventListener("turbo:load", () => {
 
           callbacks: {
             label: (context) => {
-              return `${context.parsed.y} kg`;
+              return `${context.parsed.y} ${unit}`;
             }
           }
         }

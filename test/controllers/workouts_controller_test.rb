@@ -24,13 +24,16 @@ class WorkoutsControllerTest < ActionDispatch::IntegrationTest
 
   test "cannot view edit delete or copy another user's workout" do
     [workout_path(workouts(:two)), edit_workout_path(workouts(:two)), new_workout_path(copy_from: workouts(:two).id)].each do |path|
+      sign_in users(:one)
       get path
       assert_response :not_found
     end
     assert_no_difference "Workout.count" do
+      sign_in users(:one)
       delete workout_path(workouts(:two))
       assert_response :not_found
     end
+    sign_in users(:one)
     patch workout_path(workouts(:two)), params: { workout: { memo: "unauthorized" } }
     assert_response :not_found
   end
@@ -79,17 +82,21 @@ class WorkoutsControllerTest < ActionDispatch::IntegrationTest
   test "exercise ownership is enforced" do
     patch exercise_path(exercises(:one)), params: { exercise: { name: "tampered" } }
     assert_response :not_found
+    sign_in users(:one)
     get edit_exercise_path(exercises(:private))
     assert_response :not_found
+    sign_in users(:one)
     post exercises_path, params: { exercise: { name: "自作種目", user_id: users(:two).id } }
     assert_equal users(:one).id, Exercise.find_by!(name: "自作種目").user_id
   end
 
   test "account deletion removes all associated records" do
+    user_id = users(:one).id
+    workout_id = workouts(:one).id
     users(:one).exercises.create!(name: "自作")
     delete user_registration_path
-    assert_not User.exists?(users(:one).id)
-    assert_not Workout.exists?(workouts(:one).id)
-    assert_not TrainingRecord.where(user_id: users(:one).id).exists?
+    assert_not User.exists?(user_id)
+    assert_not Workout.exists?(workout_id)
+    assert_not TrainingRecord.where(user_id: user_id).exists?
   end
 end

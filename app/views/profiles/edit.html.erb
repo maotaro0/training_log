@@ -1,34 +1,15 @@
-<div class="records-page">
-  <div class="records-shell">
-    <header class="subpage-header">
-      <h1>プロフィール編集</h1>
-      <p class="subpage-description">
-        マイページに表示する名前を設定できます。
-      </p>
-    </header>
-
-    <main class="record-form-main">
-      <section class="record-form-card">
-        <div class="form-introduction">
-          <div>
-            <h2>名前の設定</h2>
-            <p>表示したい名前を入力してください。</p>
-          </div>
-        </div>
-
-        <%= form_with model: @profile, url: profile_path, method: :patch, class: "training-form" do |form| %>
-          <div class="form-field">
-            <label for="profile_name" class="form-label">名前</label>
-            <%= form.text_field :name, class: "form-control" %>
-          </div>
-
-          <div class="form-submit-area">
-            <%= form.submit "変更を保存する", class: "form-submit-button" %>
-            <%= link_to "キャンセル", profile_path, class: "form-cancel-button" %>
-          </div>
-        <% end %>
-      </section>
-    </main>
-    <%= render "shared/bottom_nav", active: :settings %>
-  </div>
-</div>
+<main class="workouts-page"><div class="workouts-shell">
+  <h1 class="workouts-title">プロフィール編集</h1><p class="workouts-subtitle">表示名・画像・月間目標を設定できます。</p>
+  <% if @profile.errors.any? %><div class="workouts-errors" role="alert"><ul><% @profile.errors.full_messages.each do |message| %><li><%= message %></li><% end %></ul></div><% end %>
+  <%= form_with model: @profile, url: profile_path, method: :patch do |form| %>
+    <section class="workouts-card">
+      <div class="workouts-field"><%= form.label :name, "名前" %><%= form.text_field :name, maxlength: 50 %></div>
+      <div class="workouts-field"><%= form.label :monthly_goal, "月間目標（日数）" %><%= form.number_field :monthly_goal, min: 1, max: 100, step: 1, required: true %></div>
+      <div class="workouts-field"><%= form.label :avatar, "プロフィール画像" %><%= form.file_field :avatar, accept: "image/png,image/jpeg,image/webp" %><p class="workouts-history-meta">JPEG・PNG・WebP、1MB以下。</p></div>
+      <% if @profile.avatar? %><p><%= form.check_box :remove_avatar %> <%= form.label :remove_avatar, "現在の画像を削除する" %></p><% end %>
+      <%= form.submit "変更を保存する", class: "workouts-button", data: { turbo_submits_with: "保存中…" } %>
+    </section>
+  <% end %>
+  <%= link_to "キャンセル", profile_path, class: "workouts-back-link" %>
+  <%= render "shared/bottom_nav", active: :settings %>
+</div></main>

@@ -51,6 +51,8 @@
         <div class="auth-links">
           <%= render "devise/shared/links" %>
         </div>
+        <%= button_to "登録せずに体験する", guest_sign_in_path, class: "workouts-button workouts-button-secondary" %>
+        <p class="subpage-description">ゲストの記録はログアウト時に削除されます。</p>
       </section>
     </main>
   </div>

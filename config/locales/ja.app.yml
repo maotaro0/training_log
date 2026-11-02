@@ -29,6 +29,8 @@ ja:
         name: 種目名
       profile:
         name: 表示名
+        monthly_goal: 月間目標
+        avatar: プロフィール画像
   devise:
     failure:
       already_authenticated: すでにログインしています。

@@ -7,14 +7,24 @@
   <% @workout.workout_records.each do |record| %>
     <section class="workouts-card">
       <h2 class="workouts-card-title"><%= record.exercise.name %></h2>
+      <% if record.personal_best? %><p class="best-badge">🏆 重量の自己ベスト更新</p><% end %>
+      <% previous = record.previous_record %>
+      <% previous_sets = previous ? previous.workout_sets.index_by(&:set_number) : {} %>
+      <% if previous %><p class="workouts-history-meta">前回（<%= previous.workout.date.strftime("%Y/%m/%d") %>）の同じセット番号と比較</p><% else %><p class="workouts-history-meta">この種目の最初の記録です。</p><% end %>
       <% if record.memo.present? %><div class="workouts-memo"><%= simple_format(record.memo) %></div><% end %>
       <div class="workouts-table-scroll">
         <table class="workouts-table">
           <caption class="visually-hidden"><%= record.exercise.name %>のセット記録</caption>
-          <thead><tr><th scope="col">セット</th><th scope="col">重量</th><th scope="col">回数</th></tr></thead>
+          <thead><tr><th scope="col">セット</th><th scope="col">重量</th><th scope="col">回数</th><th scope="col">前回との差</th></tr></thead>
           <tbody>
             <% record.workout_sets.sort_by(&:set_number).each do |set| %>
-              <tr><td><%= set.set_number %></td><td><%= set.weight_kg.nil? ? "自重" : "#{number_with_precision(set.weight_kg, precision: 2, strip_insignificant_zeros: true)} kg" %></td><td><%= set.reps %>回</td></tr>
+              <% previous_set = previous_sets[set.set_number] %>
+              <tr><td><%= set.set_number %></td><td><%= set.weight_kg.nil? ? "自重" : "#{number_with_precision(set.weight_kg, precision: 2, strip_insignificant_zeros: true)} kg" %></td><td><%= set.reps %>回</td><td class="set-comparison">
+                <% if previous_set %>
+                  <span><%= set.weight_kg && previous_set.weight_kg ? signed_number(set.weight_kg - previous_set.weight_kg, "kg") : "重量 —" %></span>
+                  <span><%= signed_number(set.reps - previous_set.reps, "回") %></span>
+                <% else %>—<% end %>
+              </td></tr>
             <% end %>
           </tbody>
         </table>
