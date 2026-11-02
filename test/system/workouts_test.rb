@@ -33,6 +33,8 @@ class WorkoutsTest < ApplicationSystemTestCase
     end
     within all("[data-workout-form-record]").last { click_button "この種目を削除" }
     puts "EDIT_FORM_DATA: #{page.evaluate_script('Array.from(new FormData(document.querySelector("form[data-controller=workout-form]")))').inspect}"
+    puts "BROWSER_LOGS: #{page.driver.browser.logs.get(:browser).map(&:message).inspect}"
+    save_screenshot Rails.root.join("tmp/screenshots/edit-mobile.png")
     click_button "変更を保存"
     assert_text "トレーニングを更新しました。"
     assert_text "55 kg"
