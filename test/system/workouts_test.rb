@@ -53,7 +53,7 @@ class WorkoutsTest < ApplicationSystemTestCase
     assert_text "ゲスト体験中です"
     assert_selector "#weightProgressChart"
     assert page.evaluate_script("!!Chart.getChart(document.getElementById('weightProgressChart'))")
-    click_button "通知を閉じる"
+    find(".app-flash button").click
     save_screenshot Rails.root.join("tmp/screenshots/home-mobile.png")
     assert_no_horizontal_overflow
 
