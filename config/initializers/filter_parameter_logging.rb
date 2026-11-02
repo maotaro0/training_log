@@ -6,3 +6,6 @@
 Rails.application.config.filter_parameters += [
   :passw, :secret, :token, :_key, :crypt, :salt, :certificate, :otp, :ssn
 ]
+
+# Avatar payloads should never appear in request logs.
+Rails.application.config.filter_parameters += [:avatar, :avatar_data]

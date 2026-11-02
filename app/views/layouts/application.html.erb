@@ -1,20 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
   <head>
-    <title>TrainingLog</title>
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+    <title>ジムログ | トレーニング記録</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="種目・重量・回数を記録し、前回の自分と比べるトレーニングログ。">
+    <meta name="turbo-cache-control" content="no-cache">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <%= javascript_include_tag "chart.umd", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
-
   <body>
+    <div class="flash-stack">
+      <% flash.each do |type, message| %>
+        <div class="app-flash <%= type == "alert" ? "app-flash-error" : "" %>" role="<%= type == "alert" ? "alert" : "status" %>" data-controller="flash">
+          <span><%= message %></span>
+          <button type="button" aria-label="通知を閉じる" data-action="flash#dismiss">×</button>
+        </div>
+      <% end %>
+    </div>
     <%= yield %>
   </body>
 </html>

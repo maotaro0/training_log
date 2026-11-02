@@ -1,6 +1,6 @@
 <% active = local_assigns.fetch(:active, nil) %>
 
-<nav class="bottom-nav">
+<nav class="bottom-nav" aria-label="メインメニュー">
 
   <%= link_to root_path,
               class: "nav-item #{'nav-item-active' if active == :home}" do %>
@@ -20,7 +20,7 @@
   <% end %>
 
 
-  <%= link_to workouts_path,
+  <%= link_to analysis_path,
               class: "nav-item #{'nav-item-active' if active == :analysis}" do %>
 
     <span class="nav-symbol">▥</span>

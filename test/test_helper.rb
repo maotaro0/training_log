@@ -1,15 +1,21 @@
 ENV["RAILS_ENV"] ||= "test"
+ENV["BASIC_AUTH_ENABLED"] = "false"
 require_relative "../config/environment"
 require "rails/test_help"
 
-module ActiveSupport
-  class TestCase
-    # Run tests in parallel with specified workers
-    parallelize(workers: :number_of_processors)
+class ActiveSupport::TestCase
+  fixtures :all
 
-    # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
-    fixtures :all
-
-    # Add more helper methods to be used by all tests here...
+  def workout_attributes(exercise: exercises(:one), weight: 60, reps: 10)
+    { date: Date.current, memo: "今日の記録", workout_records_attributes: [
+      { exercise_id: exercise.id, workout_sets_attributes: [
+        { set_number: 1, weight_kg: weight, reps: reps },
+        { set_number: 2, weight_kg: weight, reps: reps }
+      ] }
+    ] }
   end
+end
+
+class ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
 end

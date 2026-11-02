@@ -1,0 +1,46 @@
+<main class="workouts-page"><div class="workouts-shell">
+  <h1 class="workouts-title">成長分析</h1><p class="workouts-subtitle">種目・期間・指標を選んで、積み重ねを振り返る。</p>
+  <%= link_to "トレーニング履歴を見る →", workouts_path, class: "workouts-back-link" %>
+  <% if @exercise %>
+    <section class="workouts-card">
+      <%= form_with url: analysis_path, method: :get do |form| %>
+        <div class="workouts-field"><%= form.label :exercise_id, "種目" %><%= form.collection_select :exercise_id, @exercises, :id, :name, selected: @exercise.id %></div>
+        <div class="workouts-set-grid">
+          <div class="workouts-field"><%= form.label :period, "期間" %><%= form.select :period, [["直近30日", "30"], ["直近90日", "90"], ["全期間", "all"]], selected: @period %></div>
+          <div class="workouts-field"><%= form.label :metric, "指標" %><%= form.select :metric, [["最大重量", "weight"], ["総負荷量", "volume"], ["合計回数", "reps"]], selected: @metric %></div>
+        </div>
+        <%= form.submit "表示を更新", class: "workouts-button" %>
+      <% end %>
+    </section>
+    <% if @progress.daily.any? %>
+      <section class="workouts-card">
+        <h2 class="workouts-card-title"><%= @exercise.name %>の<%= @metric_label %></h2>
+        <% if @progress.values(@metric).compact.any? %>
+          <div class="chart-wrapper"><canvas id="weightProgressChart" data-labels="<%= @progress.labels.to_json %>" data-weights="<%= @progress.values(@metric).to_json %>" data-unit="<%= @unit %>" role="img" aria-label="<%= @metric_label %>の推移"></canvas></div>
+        <% else %><p>重量の記録がありません。自重種目は「合計回数」を選んでください。</p><% end %>
+        <p class="workouts-history-meta">総負荷量＝重量×回数の合計。自重セットの負荷量は含めません。</p>
+        <% values = @progress.values(@metric).compact %>
+        <% if values.size >= 2 %><p>期間内の最初の記録から：<strong><%= signed_number(values.last - values.first, @unit) %></strong></p><% end %>
+      </section>
+      <section class="workouts-card">
+        <h2 class="workouts-card-title">選択期間の集計</h2>
+        <dl class="analysis-stats">
+          <div><dt>記録日数</dt><dd><%= @progress.daily.size %>日</dd></div>
+          <div><dt>総セット数</dt><dd><%= @progress.daily.sum { |d| d[:sets] } %></dd></div>
+          <div><dt>合計回数</dt><dd><%= @progress.daily.sum { |d| d[:reps] } %>回</dd></div>
+          <div><dt>最大重量</dt><dd><%= @progress.personal_best ? "#{number_with_precision(@progress.personal_best, precision: 2, strip_insignificant_zeros: true)}kg" : "—" %></dd></div>
+        </dl>
+      </section>
+      <section class="workouts-card">
+        <h2 class="workouts-card-title">日別の記録</h2>
+        <div class="workouts-table-scroll"><table class="workouts-table">
+          <thead><tr><th scope="col">日付</th><th scope="col"><%= @metric_label %></th><th scope="col">セット</th></tr></thead>
+          <tbody><% @progress.daily.reverse_each do |day| %><tr><td><%= day[:date].strftime("%Y/%m/%d") %></td><td><%= day[@metric.to_sym].nil? ? "—" : "#{number_with_precision(day[@metric.to_sym], precision: 2, strip_insignificant_zeros: true)}#{@unit}" %></td><td><%= day[:sets] %></td></tr><% end %></tbody>
+        </table></div>
+      </section>
+    <% else %><section class="workouts-card"><p>この期間には記録がありません。期間を広げてみてください。</p></section><% end %>
+  <% else %>
+    <section class="workouts-card"><p>まだ分析できる記録がありません。最初のトレーニングを記録しましょう。</p><%= link_to "＋ 記録を始める", new_workout_path, class: "workouts-button" %></section>
+  <% end %>
+  <%= render "shared/bottom_nav", active: :analysis %>
+</div></main>

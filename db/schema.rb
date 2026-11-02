@@ -10,12 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_10_12_144400) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_03_001000) do
   create_table "exercises", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["name"], name: "index_exercises_on_name", unique: true
+    t.integer "user_id"
+    t.index ["name"], name: "index_shared_exercise_names", unique: true, where: "user_id IS NULL"
+    t.index ["user_id", "name"], name: "index_exercises_on_user_id_and_name", unique: true
+    t.index ["user_id"], name: "index_exercises_on_user_id"
   end
 
   create_table "profiles", force: :cascade do |t|
@@ -23,6 +26,9 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_12_144400) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "monthly_goal", default: 12, null: false
+    t.binary "avatar_data"
+    t.string "avatar_content_type"
     t.index ["user_id"], name: "index_profiles_on_user_id", unique: true
   end
 
@@ -47,7 +53,10 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_12_144400) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "guest", default: false, null: false
+    t.datetime "guest_expires_at"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["guest", "guest_expires_at"], name: "index_users_on_guest_and_guest_expires_at"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
@@ -78,9 +87,11 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_12_144400) do
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id", "date", "created_at"], name: "index_workouts_on_user_id_and_date_and_created_at"
     t.index ["user_id"], name: "index_workouts_on_user_id"
   end
 
+  add_foreign_key "exercises", "users"
   add_foreign_key "profiles", "users"
   add_foreign_key "training_records", "exercises"
   add_foreign_key "training_records", "users"

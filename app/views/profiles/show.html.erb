@@ -1,35 +1,14 @@
-<div class="records-page">
-  <div class="records-shell">
-    <header class="subpage-header">
-      <h1>マイページ</h1>
-      <p class="subpage-description">
-        プロフィールやアカウント情報を確認できます。
-      </p>
-    </header>
-
-    <main class="record-form-main">
-      <section class="record-form-card">
-        <div class="form-introduction">
-          <div>
-            <h2>プロフィール</h2>
-          </div>
-        </div>
-
-        <div class="training-form">
-          <div class="form-field">
-            <span class="form-label">名前</span>
-            <strong><%= @profile.name.presence || "名前未設定" %></strong>
-          </div>
-
-          <div class="form-field">
-            <span class="form-label">メールアドレス</span>
-            <span><%= current_user.email %></span>
-          </div>
-        </div>
-        <%= link_to "プロフィールを編集", edit_profile_path, class: "records-primary-button" %>
-        <%= link_to "アカウント設定", edit_user_registration_path, class: "records-primary-button" %>
-      </section>
-    </main>
-    <%= render "shared/bottom_nav", active: :settings %>
-  </div>
-</div>
+<main class="workouts-page"><div class="workouts-shell">
+  <h1 class="workouts-title">マイページ</h1><p class="workouts-subtitle">あなたのペースで、トレーニングを続けよう。</p>
+  <section class="workouts-card">
+    <div class="profile-avatar"><% if @profile.avatar? %><%= image_tag avatar_profile_path, alt: "プロフィール画像" %><% else %><%= (@profile.name.presence || current_user.email).first.upcase %><% end %></div>
+    <h2 class="workouts-card-title"><%= @profile.name.presence || "名前未設定" %></h2>
+    <% if current_user.guest? %><p class="guest-notice">ゲスト体験中。ログアウト時に記録を削除します。ログアウトしない場合も24時間で利用期限が切れます。</p><% else %><p class="workouts-memo"><%= current_user.email %></p><% end %>
+    <p>月間目標：<%= @profile.monthly_goal %>日</p>
+    <%= link_to "プロフィールを編集", edit_profile_path, class: "workouts-button" %>
+    <%= link_to "自分の種目を管理", exercises_path, class: "workouts-button workouts-button-secondary" %>
+    <% unless current_user.guest? %><%= link_to "アカウント設定", edit_user_registration_path, class: "workouts-button workouts-button-secondary" %><% end %>
+    <%= button_to "ログアウト", destroy_user_session_path, method: :delete, class: "workouts-button workouts-button-secondary" %>
+  </section>
+  <%= render "shared/bottom_nav", active: :settings %>
+</div></main>

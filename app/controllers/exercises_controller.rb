@@ -3,54 +3,44 @@ class ExercisesController < ApplicationController
   before_action :set_exercise, only: [:edit, :update, :destroy]
 
   def index
-    @exercises = Exercise.order(:name)
+    @exercises = Exercise.available_to(current_user).order(:name)
   end
 
   def new
-    @exercise = Exercise.new
+    @exercise = current_user.exercises.new
   end
 
-def create
-  @exercise = Exercise.new(exercise_params)
-
-  if @exercise.save
-    if params[:return_to] == new_training_record_path
-      redirect_to new_training_record_path,
-                  notice: "種目を登録しました。"
+  def create
+    @exercise = current_user.exercises.new(exercise_params)
+    if @exercise.save
+      redirect_to exercises_path, notice: "自分の種目を登録しました。"
     else
-      redirect_to exercises_path,
-                  notice: "種目を登録しました。"
+      render :new, status: :unprocessable_entity
     end
-  else
-    render :new, status: :unprocessable_entity
   end
-end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @exercise.update(exercise_params)
-      redirect_to exercises_path, notice: "種目を更新しました。"
+      redirect_to exercises_path, notice: "種目を更新しました。", status: :see_other
     else
       render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
-    if @exercise.training_records.exists?
-      redirect_to exercises_path,
-                  alert: "トレーニング記録が存在する種目は削除できません。"
+    if @exercise.destroy
+      redirect_to exercises_path, notice: "種目を削除しました。", status: :see_other
     else
-      @exercise.destroy
-      redirect_to exercises_path, notice: "種目を削除しました。"
+      redirect_to exercises_path, alert: "記録に使われている種目は削除できません。", status: :see_other
     end
   end
 
   private
 
   def set_exercise
-    @exercise = Exercise.find(params[:id])
+    @exercise = current_user.exercises.find(params[:id])
   end
 
   def exercise_params

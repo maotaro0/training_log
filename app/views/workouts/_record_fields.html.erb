@@ -1,49 +1,25 @@
-
-<section class="workouts-card" data-workout-form-record>
-
-  <h2 class="workouts-card-title">
-    トレーニング種目
-  </h2>
-
+<section class="workouts-card" data-workout-form-record <%= "hidden" if record_form.object.marked_for_destruction? %>>
+  <%= record_form.hidden_field :id, data: { record_id: true } if record_form.object.persisted? %>
+  <%= record_form.hidden_field :_destroy, value: record_form.object.marked_for_destruction? ? "1" : "0", data: { record_destroy: true } %>
+  <h2 class="workouts-card-title">トレーニング種目</h2>
   <div class="workouts-field">
     <%= record_form.label :exercise_id, "種目名" %>
-
-    <%= record_form.collection_select(
-          :exercise_id,
-          exercises,
-          :id,
-          :name,
-          { prompt: "種目を選択してください" },
-          { required: true }
-        ) %>
+    <%= record_form.collection_select :exercise_id, exercises, :id, :name, { prompt: "種目を選択してください" }, { required: true } %>
   </div>
-
+  <div class="workouts-field">
+    <%= record_form.label :memo, "種目メモ（任意）" %>
+    <%= record_form.text_field :memo, maxlength: 1000, placeholder: "フォームやマシンの設定など" %>
+  </div>
   <div data-workout-form-sets>
-    <%= record_form.fields_for :workout_sets do |set_form| %>
+    <%= record_form.fields_for :workout_sets, include_id: false do |set_form| %>
       <%= render "set_fields", set_form: set_form %>
     <% end %>
   </div>
-
   <template data-workout-form-set-template>
-    <%= record_form.fields_for :workout_sets,
-                               WorkoutSet.new,
-                               child_index: "NEW_SET" do |set_form| %>
+    <%= record_form.fields_for :workout_sets, WorkoutSet.new, child_index: "NEW_SET", include_id: false do |set_form| %>
       <%= render "set_fields", set_form: set_form %>
     <% end %>
   </template>
-
-  <button
-    type="button"
-    class="workouts-button workouts-button-secondary"
-    data-action="click->workout-form#addSet">
-    ＋セットを追加
-  </button>
-
-  <button
-    type="button"
-    class="workouts-button workouts-button-danger"
-    data-action="click->workout-form#removeRecord">
-    この種目を削除
-  </button>
-
+  <button type="button" class="workouts-button workouts-button-secondary" data-action="workout-form#addSet">＋ セットを追加</button>
+  <button type="button" class="workouts-button workouts-button-danger" data-action="workout-form#removeRecord">この種目を削除</button>
 </section>

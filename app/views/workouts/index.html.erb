@@ -1,45 +1,28 @@
-<h1>トレーニング履歴</h1>
-
-<p>
-  <%= link_to "＋新しい記録を作成", new_workout_path %>
-</p>
-<% if @workouts.any? %>
-  <p>
-    <%= link_to "前回の内容をコピーして記録",
-                new_workout_path(copy_previous: true) %>
-  </p>
-<% end %>
-
-<% if @workouts.any? %>
+<main class="workouts-page"><div class="workouts-shell">
+  <h1 class="workouts-title">トレーニング履歴</h1>
+  <p class="workouts-subtitle">積み重ねた記録を振り返り、次のトレーニングへ。</p>
+  <div class="workouts-actions">
+    <%= link_to "＋ 新しい記録を作成", new_workout_path, class: "workouts-button" %>
+    <% if @workouts.any? %>
+      <%= link_to "前回の内容をコピー", new_workout_path(copy_previous: true), class: "workouts-button workouts-button-secondary" %>
+    <% end %>
+  </div>
   <% @workouts.each do |workout| %>
-    <section>
-      <hr>
-
-      <h2>
-        <%= link_to workout.date.strftime("%Y年%m月%d日"),
-                    workout_path(workout) %>
-      </h2>
-
-      <p>
-        <%= workout.workout_records.size %>種目 /
-        <%= workout.workout_records.sum { |record| record.workout_sets.size } %>セット
-      </p>
-
-      <ul>
-        <% workout.workout_records.each do |record| %>
-          <li>
-            <%= record.exercise.name %>
-          </li>
-        <% end %>
+    <article class="workouts-card">
+      <h2 class="workouts-history-date"><%= link_to l(workout.date, format: :long), workout_path(workout) %></h2>
+      <p class="workouts-history-meta"><%= workout.workout_records.size %>種目 / <%= workout.workout_records.sum { |record| record.workout_sets.size } %>セット</p>
+      <ul class="workouts-exercise-list">
+        <% workout.workout_records.each do |record| %><li><%= record.exercise.name %></li><% end %>
       </ul>
-
-      <%= link_to "詳細を見る", workout_path(workout) %>
-    </section>
+      <%= link_to "詳細を見る →", workout_path(workout), class: "workouts-back-link" %>
+    </article>
   <% end %>
-<% else %>
-  <p>まだトレーニング記録がありません。</p>
-<% end %>
-
-<hr>
-
-<%= link_to "ダッシュボードに戻る", root_path %>
+  <% if @workouts.empty? %>
+    <section class="workouts-card"><h2 class="workouts-card-title">ここから記録を始めよう</h2><p class="workouts-subtitle">まだ記録がありません。種目を選び、重量と回数を入力するだけで始められます。</p></section>
+  <% end %>
+  <nav class="workouts-pagination" aria-label="履歴のページ">
+    <%= link_to "← 新しい記録", workouts_path(page: @page - 1), class: "workouts-back-link" if @page > 1 %>
+    <%= link_to "過去の記録 →", workouts_path(page: @page + 1), class: "workouts-back-link" if @has_next_page %>
+  </nav>
+  <%= render "shared/bottom_nav", active: :analysis %>
+</div></main>

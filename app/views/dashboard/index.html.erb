@@ -1,360 +1,72 @@
-
-<div class="dashboard-page">
-  <div class="dashboard-shell">
-
-    <header class="app-header">
-      <div class="profile-area">
-        <div class="profile-avatar">
-          <%= current_user.email.first.upcase %>
-        </div>
-
-        <div class="profile-text">
-          <h1>ジムログ</h1>
-          <p>焦りは禁物!無理しちゃ沈没!<br>
-            今日もコツコツ、理想の自分へ!</p>
-        </div>
+<div class="dashboard-page"><div class="dashboard-shell">
+  <header class="app-header">
+    <div class="profile-area">
+      <div class="profile-avatar">
+        <% if @profile.avatar? %><%= image_tag avatar_profile_path, alt: "プロフィール画像" %><% else %><%= (@profile.name.presence || current_user.email).first.upcase %><% end %>
       </div>
-
-      <button class="notification-button" type="button">
-        ♢
-        <span class="notification-dot"></span>
-      </button>
-    </header>
-
-
-    <main class="dashboard-main">
-      <%= link_to "種目管理へ", exercises_path, class: "card-link" %>
-        <%= link_to "記録", new_workout_path, class: "card-link" %>
-        <%= link_to "履歴", workouts_path, class: "card-link" %>
-      <%= link_to "前回のセットをコピー",
-            new_workout_path(copy_previous: true),
-            class: "card-link" %>
-      
-      <section class="status-grid">
-
-        <div class="status-card">
-          <div class="status-icon status-icon-blue">
-            ✓
-          </div>
-
-          <div class="status-content">
-            <p class="status-label">今月</p>
-
-            <div class="status-number">
-              <strong><%= @monthly_training_count %></strong>
-              <span>回</span>
-            </div>
-
-            <div class="status-progress">
-              <div class="status-progress-bar"></div>
-            </div>
-
-            <p class="status-note">
-              今月も積み上げ中
-            </p>
-          </div>
-        </div>
-
-
-        <div class="status-card">
-          <div class="status-icon status-icon-orange">
-            🔥
-          </div>
-
-          <div class="status-content">
-            <p class="status-label">継続</p>
-
-            <div class="status-number">
-              <strong>―</strong>
-              <span>日</span>
-            </div>
-
-            <p class="status-note">
-              連続日数は今後追加予定
-            </p>
-          </div>
-        </div>
-
-      </section>
-
-
-      <section class="workout-hero">
-        <div class="hero-overlay"></div>
-
-        <div class="hero-content">
-
-          <p class="hero-kicker">
-            TODAY'S WORKOUT
-          </p>
-
-          <% if @latest_workout && @latest_record && @latest_set %>
-
-    <h2>
-      <%= @latest_record.exercise.name %> の日
-    </h2>
-
-    <p class="hero-description">
-      前回は
-
-      <% if @latest_set.weight_kg.present? %>
-        <%= number_with_precision(
-            @latest_set.weight_kg,
-            precision: 1,
-            strip_insignificant_zeros: true
-          ) %>kg
-      <% else %>
-        自重
-      <% end %>
-
-      × <%= @latest_set.reps %>回。
-
-      今日も前回の自分を超えていきましょう。
-    </p>
-
-  <% else %>
-
-  <h2>今日のトレーニング</h2>
-
-    <p class="hero-description">
-      最初のトレーニングを記録してみましょう。
-    </p>
-
-  <% end %>
-
-          <div class="hero-actions">
-  <%= link_to new_workout_path,
-            class: "hero-button hero-button-primary" do %>
-    <span class="hero-button-icon">▶</span>
-    <span>新しく記録開始</span>
-  <% end %>
-
-  <% if @latest_workout %>
-    <%= link_to new_workout_path(copy_previous: true),
-              class: "hero-button hero-button-secondary" do %>
-      <span class="hero-button-icon">▣</span>
-      <span>前回のセットをコピー</span>
-    <% end %>
-  <% else %>
-    <button
-      type="button"
-      class="hero-button hero-button-secondary"
-      disabled>
-      <span class="hero-button-icon">▣</span>
-      <span>前回のセットをコピー</span>
-    </button>
-  <% end %>
-
-
-          </div>
-        </div>
-      </section>
-
-
-      <section class="dashboard-card">
-
-        <div class="card-header">
-
-          <div class="card-title">
-            <%= link_to "すべて見る ›",
-            workouts_path,
-            class: "card-link" %>
-
-          <%= link_to "すべて見る ›",
-                      training_records_path,
-                      class: "card-link" %>
-
-        </div>
-
-
-  <% if @growth_record %>
-
-    <div class="growth-box">
-      <div class="exercise-icon">
-        🏋
-      </div>
-
-      <div class="growth-info">
-        <strong class="growth-name">
-          <%= @growth_record.name %>
-        </strong>
-
-        <% if @weight_difference > 0 %>
-          <span class="growth-badge growth-positive">
-            +<%= @weight_difference.round(1) %>kg UP!
-          </span>
-        <% elsif @weight_difference == 0 %>
-          <span class="growth-badge growth-neutral">
-            ±0kg
-          </span>
-        <% else %>
-          <span class="growth-badge growth-negative">
-            <%= @weight_difference.round(1) %>kg
-          </span>
-        <% end %>
-
-        <p class="personal-best">
-          自己ベスト：
-          <%= @personal_best_weight.round(1) %>kg
-        </p>
-      </div>
-
-      <div class="growth-message">
-        昨日の自分を<br>
-        超えていこう。
-      </div>
+      <div class="profile-text"><h1>ジムログ</h1><p><%= @profile.name.presence || "今日もコツコツ" %><br>積み重ねを、次の一歩に。</p></div>
     </div>
-
-  <% else %>
-
-    <p class="empty-message">
-      同じ種目の重量を異なる2日以上記録すると、
-      ここに成長が表示されます。
-    </p>
-
-  <% end %>
-
-      </section>
-
-
-      <section class="dashboard-card chart-card">
-
-        <div class="card-header">
-
-          <div class="card-title">
-            <span class="card-title-icon chart-icon">↗</span>
-            <h2>成長グラフ</h2>
-
-            <span class="card-subtitle">
-              最大重量推移
-            </span>
-          </div>
-
-
-          <% if @chart_exercises.any? %>
-
-            <%= form_with url: root_path,
-                          method: :get,
-                          local: true do |form| %>
-
-              <%= form.collection_select(
-                    :exercise_id,
-                    @chart_exercises,
-                    :id,
-                    :name,
-                    { selected: @selected_exercise&.id },
-                    {
-                      class: "chart-select",
-                      onchange: "this.form.submit();"
-                    }
-                  ) %>
-
-            <% end %>
-
-          <% end %>
-
-        </div>
-
-
-        <% if @selected_exercise %>
-
-          <div class="chart-wrapper">
-
-            <canvas
-              id="weightProgressChart"
-              data-labels='<%= @chart_labels.to_json %>'
-              data-weights='<%= @chart_weights.to_json %>'>
-            </canvas>
-
-          </div>
-
-        <% else %>
-
-          <p class="empty-message">
-            重量を記録するとグラフが表示されます。
-          </p>
-
+    <%= link_to "マイページ", profile_path, class: "card-link" %>
+  </header>
+  <main class="dashboard-main">
+    <% if current_user.guest? %><p class="guest-notice">ゲスト体験中です。記録はログアウト時に削除されます。</p><% end %>
+    <section class="status-grid" aria-label="トレーニングの状況">
+      <div class="status-card"><div class="status-icon status-icon-blue">✓</div><div class="status-content">
+        <p class="status-label">今月 / 目標</p><div class="status-number"><strong><%= @monthly_training_count %></strong><span>/ <%= @monthly_goal %>日</span></div>
+        <div class="status-progress" role="progressbar" aria-label="月間目標の達成率" aria-valuenow="<%= [@monthly_training_count, @monthly_goal].min %>" aria-valuemin="0" aria-valuemax="<%= @monthly_goal %>"><div class="status-progress-bar" style="width: <%= [(@monthly_training_count.to_f / @monthly_goal * 100).round, 100].min %>%"></div></div>
+        <p class="status-note"><%= link_to "目標を変更", edit_profile_path, class: "card-link" %></p>
+      </div></div>
+      <div class="status-card"><div class="status-icon status-icon-orange">🔥</div><div class="status-content">
+        <p class="status-label">連続記録</p><div class="status-number"><strong><%= @streak %></strong><span>日</span></div>
+        <p class="status-note">今日か昨日までの連続日数</p>
+      </div></div>
+    </section>
+    <section class="workout-hero"><div class="hero-content">
+      <p class="hero-kicker">TODAY'S WORKOUT</p><h2>今日の積み重ねを残そう</h2>
+      <p class="hero-description"><%= @latest_workout ? "前回の記録をコピーすれば、種目やセットをすぐに入力できます。" : "種目を選び、重量と回数を入力。最初の記録を始めましょう。" %></p>
+      <div class="hero-actions">
+        <%= link_to "＋ 新しく記録", new_workout_path, class: "hero-button hero-button-primary" %>
+        <% if @latest_workout %><%= link_to "前回をコピー", new_workout_path(copy_previous: true), class: "hero-button hero-button-secondary" %><% else %><button class="hero-button hero-button-secondary" disabled>前回をコピー</button><% end %>
+      </div>
+    </div></section>
+    <section class="dashboard-card">
+      <div class="card-header"><div class="card-title"><span class="growth-icon">↗</span><h2>成長ハイライト</h2></div><%= link_to "詳しく見る ›", analysis_path(exercise_id: @selected_exercise&.id), class: "card-link" %></div>
+      <% if @progress&.personal_best %>
+        <div class="growth-box"><div class="exercise-icon">🏋</div><div class="growth-info">
+          <strong class="growth-name"><%= @selected_exercise.name %></strong>
+          <% unless @weight_difference.nil? %><span class="growth-badge <%= @weight_difference.positive? ? "growth-positive" : "growth-neutral" %>"><%= signed_number(@weight_difference, "kg") %></span><% end %>
+          <p class="personal-best">自己ベスト：<%= number_with_precision(@progress.personal_best, precision: 2, strip_insignificant_zeros: true) %>kg</p>
+          <% if @best_updated %><p class="best-badge">🏆 最新の記録で自己ベスト</p><% end %>
+        </div></div>
+      <% else %><p class="empty-message">重量を記録すると、前回との差と自己ベストを表示します。自重種目の回数は「成長分析」で確認できます。</p><% end %>
+    </section>
+    <section class="dashboard-card chart-card">
+      <div class="card-header"><div class="card-title"><h2>成長グラフ</h2></div></div>
+      <% if @chart_exercises.any? %>
+        <%= form_with url: root_path, method: :get, class: "chart-filter" do |form| %>
+          <%= form.label :exercise_id, "種目", class: "visually-hidden" %>
+          <%= form.collection_select :exercise_id, @chart_exercises, :id, :name, { selected: @selected_exercise.id }, { class: "chart-select" } %>
+          <%= form.submit "表示", class: "chart-submit" %>
         <% end %>
-
-      </section>
-
-
-<section class="dashboard-card recent-card">
-
-  <div class="card-header">
-    <div class="card-title">
-      <span class="card-title-icon history-icon">◴</span>
-
-      <h2>
-        前回の記録
-
-        <% if @latest_workout %>
-          （<%= @latest_workout.date.strftime("%m/%d") %>）
-        <% end %>
-      </h2>
-    </div>
-
-    <%= link_to "すべて見る ›",
-                workouts_path,
-                class: "card-link" %>
-  </div>
-
-  <% if @latest_workout %>
-
-    <% @latest_workout.workout_records.each do |record| %>
-
-      <%= link_to workout_path(@latest_workout),
-                  class: "recent-record-row" do %>
-
-        <div class="exercise-icon">
-          🏋
-        </div>
-
-        <div class="recent-record-info">
-          <strong>
-            <%= record.exercise.name %>
-          </strong>
-
-          <p>
-            <%= record.workout_sets.size %>セット
-          </p>
-
-          <% record.workout_sets.sort_by(&:set_number).each do |set| %>
-            <p>
-              <%= set.set_number %>セット目：
-
-              <% if set.weight_kg.present? %>
-                <%= number_with_precision(
-                      set.weight_kg,
-                      precision: 1,
-                      strip_insignificant_zeros: true
-                    ) %>kg
-              <% else %>
-                自重
-              <% end %>
-
-              × <%= set.reps %>回
-            </p>
+        <% if @progress.values(:weight).compact.any? %>
+          <div class="chart-wrapper"><canvas id="weightProgressChart" data-labels="<%= @progress.labels.to_json %>" data-weights="<%= @progress.values(:weight).to_json %>" role="img" aria-label="1日ごとの最大重量の推移"></canvas></div>
+          <p class="empty-message">1日に記録した最大重量（kg）。<%= link_to "数値を表で見る", analysis_path(exercise_id: @selected_exercise.id), class: "card-link" %></p>
+        <% else %><p class="empty-message">この種目は自重で記録されています。「成長分析」で回数の推移を確認できます。</p><% end %>
+      <% else %><p class="empty-message">記録を保存すると、種目ごとのグラフが表示されます。</p><% end %>
+    </section>
+    <section class="dashboard-card recent-card">
+      <div class="card-header"><div class="card-title"><h2>前回の記録<%= "（#{@latest_workout.date.strftime("%m/%d")}）" if @latest_workout %></h2></div><%= link_to "履歴一覧 ›", workouts_path, class: "card-link" %></div>
+      <% if @latest_workout %>
+        <% @latest_workout.workout_records.each do |record| %>
+          <%= link_to workout_path(@latest_workout), class: "recent-record-row" do %>
+            <div class="exercise-icon">🏋</div><div class="recent-record-info"><strong><%= record.exercise.name %></strong><p><%= record.workout_sets.size %>セット</p>
+              <% record.workout_sets.sort_by(&:set_number).each do |set| %><p><%= set.set_number %>セット：<%= set.weight_kg.nil? ? "自重" : "#{number_with_precision(set.weight_kg, precision: 2, strip_insignificant_zeros: true)}kg" %> × <%= set.reps %>回</p><% end %>
+            </div><span class="recent-arrow">›</span>
           <% end %>
-        </div>
-
-        <span class="recent-arrow">›</span>
-
-      <% end %>
-    <% end %>
-
-  <% else %>
-
-    <p class="empty-message">
-      まだトレーニング記録がありません。
-    </p>
-
-  <% end %>
-
-</section>
-
-    </main>
-
-<%= render "shared/bottom_nav", active: :home %>
-
-  </div>
-</div>
+        <% end %>
+      <% else %><p class="empty-message">まだトレーニング記録がありません。</p><% end %>
+    </section>
+    <%= link_to "種目を管理する", exercises_path, class: "workouts-back-link" %>
+  </main>
+  <%= render "shared/bottom_nav", active: :home %>
+</div></div>
